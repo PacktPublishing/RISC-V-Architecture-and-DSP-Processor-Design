@@ -104,3 +104,14 @@ _Zhang Zhiwei_ Zhang Zhiwei is a Ph.D., Researcher, and Doctoral Supervisor at t
 </ul>
 
 </details>
+
+
+<details> 
+  <summary><h2>Repository structure</h2></summary>
+<ul>
+  <li><a href="https://github.com/PacktPublishing/RISC-V-Architecture-and-DSP-Processor-Design/tree/main/Chapter09">Chapter 09</a></li>
+  <li><a href="https://github.com/PacktPublishing/RISC-V-Architecture-and-DSP-Processor-Design/tree/main/bsp">Board Support Package Code And Documentation</a></li>
+
+</ul>
+
+</details>

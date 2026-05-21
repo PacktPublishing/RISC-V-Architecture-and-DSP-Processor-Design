@@ -1,0 +1,3851 @@
+p1
+Digital Signal Processor and Solutions Provider
+
+Qingdao Benyuan Microelectronics Co., Ltd.
+
+FDM320RV335 Datasheet
+
+Version V1.0
+
+
+p2
+Datasheet FDM320RV335
+
+
+p3
+Datasheet FDM320RV335
+
+- 1 -
+
+Table of Contents
+
+1. Product Features ........................................................................................................ 4
+
+2. Functional Block Diagram .......................................................................................... 6
+
+3. Pin Description ............................................................................................................ 7
+
+4. Device Detailed Description ..................................................................................... 15
+
+4.1. FDM320RV335 Processor Core ........................................................................... 15
+
+4.1.1. Instruction Set .................................................................................................. 16
+
+4.1.2. Address Mapping ............................................................................................. 17
+
+4.2. System Control .................................................................................................... 17
+
+4.2.1. Oscillator and PLL Module .............................................................................. 19
+
+4.2.2. Watchdog Module ............................................................................................ 20
+
+4.3. Interrupts ............................................................................................................. 24
+
+4.4. Peripherals .......................................................................................................... 32
+
+4.4.1. DMA ................................................................................................................. 33
+
+4.4.2. Timers .............................................................................................................. 34
+
+4.4.3. Enhanced PWM Module ................................................................................. 36
+
+4.4.4. High-Resolution PWM (HRPWM) ................................................................... 40
+
+4.4.5. Enhanced CAP Module ................................................................................... 41
+
+4.4.6. Enhanced QEP Module ................................................................................... 42
+
+4.4.7. Analog-to-Digital Converter (ADC Module) ..................................................... 44
+
+4.4.8. Multichannel Buffered Serial Port (MCBSP) Module ...................................... 47
+
+4.4.9. Enhanced Controller Area Network (ECAN) Module (ECAN-A and ECAN-B) ... 50
+
+4.4.10. Serial Communication Interface (SCI) Module (SCI-A, SCI-B, SCI-C) ........ 55
+
+4.4.11. Serial Peripheral Interface (SPI) Module (SPI-A) ........................................ 59
+
+4.4.12. Inter-Integrated Circuit (I2C) ........................................................................ 62
+
+
+p4
+Datasheet FDM320RV335
+
+- 2 -
+
+4.4.13. GPIO MUX .................................................................................................... 65
+
+4.4.14. External Interface (XINTF) ........................................................................... 72
+
+4.4.15. Code Security Module (CSM) ....................................................................... 75
+
+4.5. Low Power Modes ............................................................................................... 76
+
+4.6. Complete Peripheral Register List ...................................................................... 76
+
+4.6.1. Register Mapping ............................................................................................ 76
+
+4.6.2. Flash and OTP Registers ............................................................................... 77
+
+4.6.3. Code Security Module (CSM) Registers ........................................................ 82
+
+4.6.4 DMA Registers ................................................................................................. 83
+
+4.7. Boot Flow and BOOT ROM ................................................................................ 87
+
+5. Timing and Switching Characteristics ...................................................................... 88
+
+5.1. Timing Parameter Symbols ................................................................................ 88
+
+5.2. Test Load Circuit ................................................................................................ 89
+
+5.3. Device Clock Table ............................................................................................ 89
+
+5.4. Power Supply Sequencing ................................................................................. 90
+
+5.5. Clock Requirements and Characteristics ............................................................ 92
+
+5.6. Peripheral Timing ............................................................................................... 94
+
+5.6.1. General Purpose Input/Output (GPIO) ............................................................ 94
+
+5.6.2. Enhanced Control Peripherals ...................................................................... 100
+
+5.6.3. External Interrupt Timing .............................................................................. 102
+
+5.6.4. I2C Electrical Specifications and Timing ....................................................... 103
+
+5.6.5. Serial Peripheral Interface (SPI) Timing ....................................................... 103
+
+5.6.6. Multichannel Buffered Serial Port (MCBSP) Timing ..................................... 108
+
+5.6.7. External Interface (XINTF) Timing ............................................................... 115
+
+5.6.8. DSP Emulator Connection Without Signal Buffer ......................................... 116
+
+5.6.9. Flash Timing ............................................................................................... 134
+
+6. Program Migration ............................................................................................... 137
+
+
+p5
+Datasheet FDM320RV335
+
+- 3 -
+
+6.1. Portability ........................................................................................................ 137
+
+6.2. Conversion Program ....................................................................................... 137
+
+7. Electrical Specifications ...................................................................................... 137
+
+7.1. Absolute Maximum Ratings ............................................................................ 137
+
+7.2. Recommended Operating Conditions ............................................................. 138
+
+7.3. Electrical Characteristics ................................................................................ 139
+
+p6
+Datasheet FDM320RV335
+
+4
+
+1. Product Features
+
+• High-performance digital signal processor technology
+
+- Up to 150 MHz (6.67 ns cycle time)
+
+- 1.8V / 1.9V core, 3.3V I/O design
+
+• High-performance 32-bit DSP
+
+- IEEE 754-2008 single-precision floating-point unit (FPU), RNE, RTZ, RDN, RUP, RMM rounding modes
+
+- 16×16 and 32×32 multiply-accumulate operations (MAC), 40-bit MR register (Multiply-accumulate Register)
+
+- 16×16 dual multiply-accumulate operations (MAC)
+
+- Harvard bus architecture
+
+- Fast interrupt response and handling, enhanced implementation of RISC-V interrupt standard (PLIC + CLINT)
+
+- Unified memory programming model
+
+- Efficient code (using C/C++ and assembly language)
+
+• 6-channel DMA processor (for ADC, McBSP, ePWM, XINTF and SARAM)
+
+• 16-bit or 32-bit external interface (XINTF)
+
+- More than 4M×8 address range
+
+• On-chip memory
+
+- 512K×8 Flash, 128K×8 SARAM
+
+- 4K×8 one-time programmable (OTP) ROM
+
+• Boot ROM (16K×8)
+
+- Supports software boot modes (via SCI, SPI, CAN, I2C, McBSP, XINTF and parallel I/O)
+
+- Standard math lookup tables
+
+• Clock and system control
+
+- Supports dynamic PLL ratio changes
+
+- On-chip oscillator
+
+- Safety timer module
+
+• GPIO0 to GPIO63 pins can be connected to one of eight external core interrupts
+
+• 128-bit security key / lock
+
+
+p7
+Datasheet FDM320RV335
+
+5
+
+- Protects Flash / OTP / RAM modules
+
+- Prevents firmware reverse engineering
+
+• Enhanced control peripherals
+
+- Up to 18 pulse width modulation (PWM) outputs
+
+- Up to 6 high-resolution PWM (HRPWM) outputs supporting 150 ps Micro Edge Positioner (MEP) resolution
+
+- Up to 6 event capture inputs
+
+- Up to 2 quadrature encoder interfaces
+
+- Up to 8 32-bit timers (6 eCAP and 2 eQEP)
+
+- Up to 9 32-bit timers (6 ePWM and 3 XINTCTR)
+
+• 3 32-bit DSP timers
+
+• Serial port peripherals
+
+- Up to 2 Controller Area Network (CAN) modules
+
+- Up to 3 SCI (UART) modules
+
+- Up to 2 McBSP modules (configurable as SPI)
+
+- 1 SPI module
+
+- 1 Inter-Integrated Circuit (I2C) bus
+
+• 12-bit Analog-to-Digital Converter (ADC), 16 channels
+
+- 80 ns conversion rate
+
+- 2 × 8-channel input multiplexers
+
+- 2 sample-and-hold units
+
+- Single / synchronous conversion
+
+- Internal or external reference
+
+• Up to 88 individually programmable multiplexed General Purpose Input/Output (GPIO) pins with input filtering
+
+• Supports RISC-V Debug 0.13.2 debugging standard
+
+• Advanced emulation features
+
+- Analysis and breakpoint functions
+
+- Hardware-assisted real-time debugging
+
+• Development support includes
+
+
+p8
+Datasheet FDM320RV335
+
+6
+
+- ANSI C/C++ compiler / assembler / linker
+
+- Digital motor control and digital power software libraries
+
+• Low-power and power-saving modes
+
+- Supports IDLE, STANDBY, HALT modes
+
+- Independent peripheral clocks can be disabled
+
+• Byte order: Little-endian mode
+
+• Package options:
+
+- Lead-free, green package
+
+- Plastic Quad Flat Package 176 pins (LQFP176)
+
+- Dimensions according to GB/T 7092
+
+• Operating temperature
+
+- E – Industrial application grade, -40~125°C
+
+
+2. Functional Block Diagram
+
+The functional block diagram of FDM320RV335 is shown in Figure 2-1.
+
+<picture_1>
+
+Figure 2-1 FDM320RV335 Functional Block Diagram
+
+All components of FDM320RV335 are connected to the system bus. The main masters include the DSP subsystem and
+
+
+p9
+Datasheet FDM320RV335
+
+7
+
+DMA.
+
+The DSP subsystem includes the RISC-V architecture SpringCore1.0, independent internal storage units, timers, interrupt controller, and debug unit.
+
+When SpringCore1.0 initiates an access, the internal bus of the DSP subsystem first determines the address. If the address belongs to the subsystem internally, the access is completed internally. Otherwise, the internal bus sends the access request to the system bus, where the access is completed under system bus arbitration.
+
+Before DMA initiates access as a master, it first receives configuration from SpringCore1.0 as a slave, after which DMA initiates access.
+
+Slave devices accessible by DMA include: data storage units inside the DSP subsystem, ADC result registers, and ePWM + HRPWM registers.
+
+All peripherals perform system access and configuration to the DSP subsystem through the interrupt controller (PLIC). PLIC accepts multiple external interrupt sources, arbitrates them, and generates one external interrupt signal to the DSP subsystem.
+
+
+3. Pin Description
+
+The functions of each pin are shown in Table 3-1.
+
+<picture_1>
+
+Figure 3-1 RV335 Pin Diagram
+
+
+p10
+Datasheet FDM320RV335
+
+8
+
+The signal descriptions of each pin are shown in Table 3-1.
+
+GPIO functions (shown in italics) are the default state after reset. Peripheral signals listed beneath them are alternate functions.
+
+All pins capable of generating XINTF output functions have 8 mA (typical) drive strength. Even if the pin is not configured for XINTF, it may still have this drive capability.
+
+All other pins have a typical 4 mA drive capability (unless otherwise specified).
+
+All GPIO pins are I/O/Z and include an internal pull-up resistor, which can be selectively enabled or disabled on a per-pin basis. This feature applies only to GPIO pins.
+
+The pull-up resistors of GPIO0–GPIO11 are disabled after reset.
+
+The pull-up resistors of GPIO12–GPIO87 are enabled after reset.
+
+Table 3-1 Pin Signal Description
+
+<picture_1>
+
+p11
+Datasheet FDM320RV335
+
+9
+
+Table 3-1 Pin Signal Description (continued)
+
+8  Digital logic ground pin  VSS  
+96 General Purpose Input/Output 54  
+SPI-A slave input / master output  
+External interface data line 25  
+GPIO54  
+SPISIMOA  
+XD25
+
+9  Digital I/O power supply  VDDIO  
+97 General Purpose Input/Output 55  
+SPI-A master input / slave output  
+External interface data line 24  
+GPIO55  
+SPISOMIA  
+XD24
+
+10 General Purpose Input/Output 3  
+Enhanced PWM2 output B  
+Enhanced capture 5 input/output  
+McBSP-B receive frame sync  
+GPIO3  
+EPWM2B  
+ECAP5  
+MCLKRB
+
+98 General Purpose Input/Output 56  
+SPI-A clock  
+External interface data line 23  
+GPIO56  
+SPICLKA  
+XD23
+
+11 General Purpose Input/Output 4  
+Enhanced PWM3 output A and HRPWM channel  
+GPIO4  
+EPWM3A
+
+99 General Purpose Input/Output 57  
+SPI-A slave transmit enable  
+External interface data line 22  
+GPIO57  
+SPISTEA  
+XD22
+
+
+p12
+Datasheet FDM320RV335
+
+10
+
+Table 3-1 Pin Signal Description (continued)
+
+12 General Purpose Input/Output 5  
+Enhanced PWM3 output B  
+McBSP-B receive frame sync  
+Enhanced capture input/output 1  
+GPIO5  
+EPWM3B  
+MFSRA  
+ECAP1
+
+100 General Purpose Input/Output 58  
+McBSP-A receive clock  
+External interface data line 21  
+GPIO58  
+MCLKRA  
+XD21
+
+13 General Purpose Input/Output 6  
+Enhanced PWM4 output A and HRPWM channel  
+ePWM sync pulse input  
+ePWM sync pulse output  
+GPIO6  
+EPWM4A  
+EPWMSYNCI  
+EPWMSYNCO
+
+101 Core and digital logic power supply  
+VDD
+
+14 Digital logic ground pin  
+VSS
+
+102 Internal oscillator output  
+X2
+
+15 Core and digital logic power supply  
+VDD
+
+103 Digital logic ground pin  
+VSS
+
+16 General Purpose Input/Output 7  
+Enhanced PWM4 output B  
+McBSP-B receive clock  
+Enhanced capture input/output 2  
+GPIO7  
+EPWM4B  
+MCLKRA  
+ECAP2
+
+104 Internal oscillator input  
+X1
+
+
+p13
+Datasheet FDM320RV335
+
+11
+
+Table 3-1 Pin Signal Description (continued)
+
+17 General Purpose Input/Output 8  
+Enhanced PWM5 output A and HRPWM channel  
+Enhanced CAN-B transmit  
+ADC conversion start A  
+GPIO8  
+EPWM5A  
+CANTXB  
+ADCSOCAO
+
+105 External oscillator input  
+XCLKIN
+
+18 General Purpose Input/Output 9  
+Enhanced PWM5 output B  
+SCI-B transmit data  
+Enhanced capture input/output 3  
+GPIO9  
+EPWM5B  
+SCITXDB  
+ECAP3
+
+106 Digital logic ground pin  
+VSS
+
+19 General Purpose Input/Output 10  
+Enhanced PWM6 output A and HRPWM channel  
+Enhanced CAN-B receive  
+ADC conversion start B  
+GPIO10  
+EPWM6A  
+CANRXB  
+ADCSOCBO
+
+107 Digital I/O power supply  
+VDDIO
+
+20 General Purpose Input/Output 11  
+Enhanced PWM6 output B  
+SCI-B receive data  
+Enhanced capture input/output 4  
+GPIO11  
+EPWM6B  
+SCIRXDB  
+ECAP4
+
+
+p14
+Datasheet FDM320RV335
+
+12
+
+Table 3-1 Pin Signal Description (continued)
+
+21 General Purpose Input/Output 12  
+Trip-zone input 1  
+Enhanced CAN-B transmit  
+McBSP-B serial data transmit  
+GPIO12  
+TZ1  
+CANTXB  
+MDXB
+
+108 Digital logic ground pin  
+VSS
+
+22 Digital logic ground pin  
+VSS
+
+109 Core and digital logic power supply  
+VDD
+
+23 Core and digital logic power supply  
+VDD
+
+110 General Purpose Input/Output 59  
+McBSP-A receive frame sync  
+External interface data line 20  
+GPIO59  
+MFSRA  
+XD20
+
+24 General Purpose Input/Output 13  
+Trip-zone input 2  
+Enhanced CAN-B receive  
+McBSP-B serial data receive  
+GPIO13  
+TZ2  
+CANRXB  
+MDRB
+
+111 General Purpose Input/Output 60  
+McBSP-B receive clock  
+External interface data line 19  
+GPIO60  
+MCLKRB  
+XD19
+
+
+p15
+Datasheet FDM320RV335
+
+13
+
+Table 3-1 Pin Signal Description (continued)
+
+25 General Purpose Input/Output 14  
+Trip-zone input 3 / external hold request  
+SCI-B transmit  
+McBSP-B transmit clock  
+GPIO14  
+TZ3 / XHOLD  
+SCITXDB  
+MCLKXB
+
+112 General Purpose Input/Output 61  
+McBSP-B receive frame sync  
+External interface data line 18  
+GPIO61  
+MFSRB  
+XD18
+
+26 General Purpose Input/Output 15  
+Trip-zone input 4 / external hold acknowledge  
+SCI-B receive  
+McBSP-B transmit frame sync  
+GPIO15  
+TZ4 / XHOLDA  
+SCIRXDB  
+MFSXB
+
+113 General Purpose Input/Output 62  
+SCI-C receive data  
+External interface data line 17  
+GPIO62  
+SCIRXDC  
+XD17
+
+27 General Purpose Input/Output 16  
+GPIO16
+
+114 General Purpose Input/Output 63  
+SCI-C transmit data  
+External interface data line 16  
+GPIO63  
+SCITXDC  
+XD16
+
+p16
+Datasheet FDM320RV335
+
+14
+
+Table 3-1 Pin Signal Description (continued)
+
+27 General Purpose Input/Output 16  
+SPI-A slave input / master output  
+Enhanced CAN-B transmit  
+Trip-zone input 5  
+GPIO16  
+SPISIMOA  
+CANTXB  
+TZ5
+
+115 General Purpose Input/Output 64  
+GPIO64
+
+External interface data line 15  
+XD15
+
+28 General Purpose Input/Output 17  
+SPI-A master input / slave output  
+Enhanced CAN-B receive  
+Trip-zone input 6  
+GPIO17  
+SPISOMIA  
+CANRXB  
+TZ6
+
+116 General Purpose Input/Output 65  
+GPIO65
+
+External interface data line 14  
+XD14
+
+29 Core and digital logic power supply  
+VDD
+
+117 Core and digital logic power supply  
+VDD
+
+30 Digital logic ground pin  
+VSS
+
+118 Digital logic ground pin  
+VSS
+
+31 ADC analog low power pin 1  
+VDD1A18
+
+119 General Purpose Input/Output 66  
+GPIO66
+
+External interface data line 13  
+XD13
+
+
+p17
+Datasheet FDM320RV335
+
+15
+
+32 ADC analog ground pin  
+VSS1AGND
+
+120 Digital logic ground pin  
+VSS
+
+33 ADC analog ground pin  
+VSSA2
+
+121 Digital I/O power supply  
+VDDIO
+
+34 ADC analog high power pin  
+VDDA2
+
+122 General Purpose Input/Output 67  
+GPIO67
+
+External interface data line 12  
+XD12
+
+35 ADC Group A Channel 7 input  
+ADCINA7
+
+123 General Purpose Input/Output 68  
+GPIO68
+
+External interface data line 11  
+XD11
+
+36 ADC Group A Channel 6 input  
+ADCINA6
+
+124 General Purpose Input/Output 69  
+GPIO69
+
+External interface data line 10  
+XD10
+
+37 ADC Group A Channel 5 input  
+ADCINA5
+
+125 Digital logic ground pin  
+VSS
+
+
+p18
+Datasheet FDM320RV335
+
+16
+
+38 ADC Group A Channel 4 input  
+ADCINA4
+
+126 Core and digital logic power supply  
+VDD
+
+39 ADC Group A Channel 3 input  
+ADCINA3
+
+127 General Purpose Input/Output 70  
+GPIO70
+
+External interface data line 9  
+XD9
+
+40 ADC Group A Channel 2 input  
+ADCINA2
+
+128 General Purpose Input/Output 71  
+GPIO71
+
+External interface data line 8  
+XD8
+
+41 ADC Group A Channel 1 input  
+ADCINA1
+
+129 General Purpose Input/Output 72  
+GPIO72
+
+External interface data line 7  
+XD7
+
+42 ADC Group A Channel 0 input  
+ADCINA0
+
+130 General Purpose Input/Output 73  
+GPIO73
+
+External interface data line 6  
+XD6
+
+
+p19
+Datasheet FDM320RV335
+
+17
+
+43 ADC reference low level  
+ADCLO
+
+131 General Purpose Input/Output 74  
+GPIO74
+
+External interface data line 5  
+XD5
+
+44 ADC analog I/O ground pin  
+VSSAIO
+
+132 General Purpose Input/Output 75  
+GPIO75
+
+External interface data line 4  
+XD4
+
+45 ADC analog I/O power pin  
+VDDAIO
+
+133 General Purpose Input/Output 76  
+GPIO76
+
+External interface data line 3  
+XD3
+
+46 ADC Group B Channel 0 input  
+ADCINB0
+
+134 General Purpose Input/Output 77  
+GPIO77
+
+External interface data line 2  
+XD2
+
+47 ADC Group B Channel 1 input  
+ADCINB1
+
+135 General Purpose Input/Output 78  
+GPIO78
+
+External interface data line 1  
+XD1
+
+
+p20
+Datasheet FDM320RV335
+
+18
+
+48 ADC Group B Channel 2 input  
+ADCINB2
+
+136 General Purpose Input/Output 79  
+GPIO79
+
+External interface data line 0  
+XD0
+
+49 ADC Group B Channel 3 input  
+ADCINB3
+
+137 General Purpose Input/Output 38  
+GPIO38
+
+External interface write enable 0  
+XWE0
+
+50 ADC Group B Channel 4 input  
+ADCINB4
+
+138 SYSCLKOUT output clock  
+XCLKOUT
+
+51 ADC Group B Channel 5 input  
+ADCINB5
+
+139 Core and digital logic power supply  
+VDD
+
+52 ADC Group B Channel 6 input  
+ADCINB6
+
+140 Digital logic ground pin  
+VSS
+
+53 ADC Group B Channel 7 input  
+ADCINB7
+
+141 General Purpose Input/Output 28  
+GPIO28
+
+SCI receive data  
+SCIRXDA
+
+External interface zone 6 chip select  
+XZCS6
+
+p21
+Datasheet FDM320RV335
+
+19
+
+54 ADC external reference input  
+ADCREFIN
+
+142 General Purpose Input/Output 34  
+GPIO34
+
+Enhanced capture input/output 1  
+ECAP1
+
+External interface ready signal  
+XREADY
+
+55 ADC internal reference mid output  
+ADCREFM
+
+143 Digital I/O power supply  
+VDDIO
+
+56 ADC internal reference positive output  
+ADCREFP
+
+144 Digital logic ground pin  
+VSS
+
+57 ADC current bias external resistor pin.  
+Connect a precise 22kΩ resistor to analog ground.  
+ADCRESEXT
+
+145 General Purpose Input/Output 36  
+GPIO36
+
+SCI receive data  
+SCIRXDA
+
+External interface zone 0 chip select  
+XZCS0
+
+
+p22
+Datasheet FDM320RV335
+
+20
+
+58 ADC analog ground pin  
+VSS2AGND
+
+146 Core and digital logic power supply  
+VDD
+
+59 ADC analog low power pin 2  
+VDD2A18
+
+147 Digital logic ground pin  
+VSS
+
+60 Digital logic ground pin  
+VSS
+
+148 General Purpose Input/Output 35  
+GPIO35
+
+SCI transmit data  
+SCITXDA
+
+External interface read/write  
+XR/W
+
+61 Core and digital logic power supply  
+VDD
+
+149 External interface read enable  
+XRD
+
+
+p23
+Datasheet FDM320RV335
+
+21
+
+62 General Purpose Input/Output 18  
+GPIO18
+
+SPI-A clock input/output  
+SPICLKA
+
+SCI-B transmit  
+SCITXDB
+
+Enhanced CAN-A receive  
+CANRXA
+
+150 General Purpose Input/Output 37  
+GPIO37
+
+Enhanced capture input/output 2  
+ECAP2
+
+External interface zone 7 chip select  
+XZCS7
+
+63 General Purpose Input/Output 19  
+GPIO19
+
+SPI-A slave transmit enable  
+SPISTEA
+
+SCI-B receive  
+SCIRXDB
+
+Enhanced CAN-A transmit  
+CANTXA
+
+
+p24
+Datasheet FDM320RV335
+
+22
+
+151 General Purpose Input/Output 40  
+GPIO40
+
+External interface address line 0 / external interface write enable 1  
+XA0 / XWE1
+
+64 General Purpose Input/Output 20  
+GPIO20
+
+Enhanced QEP1 input A  
+EQEP1A
+
+McBSP-A serial data transmit  
+MDXA
+
+Enhanced CAN-B transmit  
+CANTXB
+
+152 General Purpose Input/Output 41  
+GPIO41
+
+External interface address line 1  
+XA1
+
+65 General Purpose Input/Output 21  
+GPIO21
+
+Enhanced QEP1 input B  
+EQEP1B
+
+McBSP-A serial data receive  
+MDRA
+
+Enhanced CAN-B receive  
+CANRXB
+
+
+p25
+Datasheet FDM320RV335
+
+23
+
+153 General Purpose Input/Output 42  
+GPIO42
+
+External interface address line 2  
+XA2
+
+66 General Purpose Input/Output 22  
+GPIO22
+
+Enhanced QEP1 strobe pulse  
+EQEP1S
+
+McBSP-A transmit clock  
+MCLKXA
+
+SCI-B transmit  
+SCITXDB
+
+154 Core and digital logic power supply  
+VDD
+
+67 General Purpose Input/Output 23  
+GPIO23
+
+Enhanced QEP1 index  
+EQEP1I
+
+McBSP-A transmit frame sync  
+MFSXA
+
+SCI-B receive  
+SCIRXDB
+
+p26
+Datasheet FDM320RV335
+
+24
+
+155 Digital logic ground pin  
+VSS
+
+68 General Purpose Input/Output 24  
+GPIO24
+
+Enhanced capture 1  
+ECAP1
+
+Enhanced QEP2 input A  
+EQEP2A
+
+McBSP-B serial data transmit  
+MDXB
+
+156 General Purpose Input/Output 43  
+GPIO43
+
+External interface address line 3  
+XA3
+
+69 General Purpose Input/Output 25  
+GPIO25
+
+Enhanced capture 2  
+ECAP2
+
+Enhanced QEP2 input B  
+EQEP2B
+
+McBSP-B serial data receive  
+MDRB
+
+
+p27
+Datasheet FDM320RV335
+
+25
+
+157 General Purpose Input/Output 44  
+GPIO44
+
+External interface address line 4  
+XA4
+
+70 Digital logic ground pin  
+VSS
+
+158 General Purpose Input/Output 45  
+GPIO45
+
+External interface address line 5  
+XA5
+
+71 Digital I/O power supply  
+VDDIO
+
+159 Digital I/O power supply  
+VDDIO
+
+72 General Purpose Input/Output 26  
+GPIO26
+
+Enhanced capture 3  
+ECAP3
+
+Enhanced QEP2 index  
+EQEP2I
+
+McBSP-B transmit clock  
+MCLKXB
+
+
+p28
+Datasheet FDM320RV335
+
+26
+
+160 Digital logic ground pin  
+VSS
+
+73 General Purpose Input/Output 27  
+GPIO27
+
+Enhanced capture 4  
+ECAP4
+
+Enhanced QEP2 strobe pulse  
+EQEP2S
+
+McBSP-B transmit frame sync  
+MFSXB
+
+161 General Purpose Input/Output 46  
+GPIO46
+
+External interface address line 6  
+XA6
+
+74 General Purpose Input/Output 32  
+GPIO32
+
+I2C data open-drain bidirectional port  
+SDAA
+
+Enhanced PWM sync pulse input  
+EPWMSYNCI
+
+ADC conversion start A  
+ADCSOCAO
+
+
+p29
+Datasheet FDM320RV335
+
+27
+
+162 General Purpose Input/Output 47  
+GPIO47
+
+External interface address line 7  
+XA7
+
+75 General Purpose Input/Output 33  
+GPIO33
+
+I2C clock open-drain bidirectional port  
+SCLA
+
+Enhanced PWM sync pulse output  
+EPWMSYNCO
+
+ADC conversion start B  
+ADCSOCBO
+
+163 General Purpose Input/Output 80  
+GPIO80
+
+External interface address line 8  
+XA8
+
+76 JTAG test data input  
+TDI
+
+164 General Purpose Input/Output 81  
+GPIO81
+
+External interface address line 9  
+XA9
+
+
+p30
+Datasheet FDM320RV335
+
+28
+
+77 JTAG test data output  
+TDO
+
+165 General Purpose Input/Output 82  
+GPIO82
+
+External interface address line 10  
+XA10
+
+78 JTAG test reset  
+TRST
+
+166 Digital logic ground pin  
+VSS
+
+79 JTAG test mode select  
+TMS
+
+167 Core and digital logic power supply  
+VDD
+
+80 Device reset input and safety reset output  
+XRS
+
+168 General Purpose Input/Output 83  
+GPIO83
+
+External interface address line 11  
+XA11
+
+p31
+Datasheet FDM320RV335
+
+29
+
+81 Test pin 1  
+TEST1
+
+169 General Purpose Input/Output 84  
+GPIO84
+
+External interface address line 12  
+XA12
+
+82 Test pin 2  
+TEST2
+
+170 Digital I/O power supply  
+VDDIO
+
+83 Digital logic ground pin  
+VSS
+
+171 Digital logic ground pin  
+VSS
+
+84 Test pin 3  
+TEST3
+
+172 General Purpose Input/Output 85  
+GPIO85
+
+External interface address line 13  
+XA13
+
+
+p32
+Datasheet FDM320RV335
+
+30
+
+85 Emulator pin 0  
+EMU0
+
+173 General Purpose Input/Output 86  
+GPIO86
+
+External interface address line 14  
+XA14
+
+86 Emulator pin 1  
+EMU1
+
+174 General Purpose Input/Output 87  
+GPIO87
+
+External interface address line 15  
+XA15
+
+87 JTAG test clock  
+TCK
+
+175 General Purpose Input/Output 39  
+GPIO39
+
+External interface address line 16  
+XA16
+
+88 General Purpose Input/Output 48  
+GPIO48
+
+Enhanced capture input/output 5  
+ECAP5
+
+External interface data line 31  
+XD31
+
+
+p33
+Datasheet FDM320RV335
+
+31
+
+176 General Purpose Input/Output 31  
+GPIO31
+
+Enhanced CAN-A transmit  
+CANTXA
+
+External interface address line 17  
+XA17
+
+— Digital I/O power supply  
+VDDIO
+
+
+4. Device Detailed Description
+
+4.1 FDM320RV335 Processor Core
+
+The FDM320RV335 processor core is a RISC-V compatible, high-efficiency, low-cost 32-bit processor for embedded applications.
+
+FDM320RV335 adopts the RV32IMFC-Ext instruction set architecture and is mainly targeted at high-performance real-time signal processing fields such as digital power supply and motor control.
+
+Main features of the FDM320RV335 processor core:
+
+
+p34
+Datasheet FDM320RV335
+
+32
+
+1) RISC-V architecture.
+
+2) Supports integer and fixed-point computation types.
+
+3) Supports 32-bit single-precision data type.
+
+4) Supports 32 general-purpose integer registers X0–X31.
+
+5) Supports 32 floating-point general-purpose registers F0–F31.
+
+6) Hardware RAW and WAR dependency detection.
+
+7) Supports RISC-V Debug 0.13.2 debugging standard, including breakpoints, single-step and similar operations.
+
+8) Customized instructions accelerate key performance paths.
+
+9) Fast context switching for real-time processing acceleration.
+
+10) 16-bit compressed instructions.
+
+Independent memory spaces:
+
+1) Private high-speed program space PMEM and data space DMEM.
+
+2) External masters may initialize DMEM.
+
+3) 32-bit addressable space.
+
+The block diagram of the FDM320RV335 processor DSP subsystem is shown below:
+
+
+p35
+Datasheet FDM320RV335
+
+33
+
+<picture_1>
+
+Figure 4-1 FDM320RV335 Subsystem Block Diagram
+
+The FDM320RV335 DSP includes an instruction fetch unit, decode unit, memory access unit, branch control unit, integer processing unit, floating-point processing unit, and two types of register files: X Regfile and F Regfile, used for integer and floating-point operations respectively.
+
+p36
+Datasheet FDM320RV335
+
+34
+
+The meanings and functions of each module are:
+
+1) IFU: Instruction Fetch Unit, responsible for instruction fetching, including handling of incoming interrupts and branch instructions, as well as core exceptions and pipeline front-end processing.
+
+2) IDU: Instruction Decode Unit, responsible for instruction decoding and dispatching instructions to functional units.
+
+3) IXU: Integer Execution Unit, responsible for integer / fixed-point ALU computations.
+
+4) FXU: Floating Execution Unit, responsible for single-precision floating-point ALU computations.
+
+5) LSU: Load Store Unit, responsible for memory load/store operations, address calculation, etc.
+
+6) XRF: X Register File, stores integer data.
+
+7) FRF: F Register File, stores floating-point data.
+
+8) PMEM: Program Memory.
+
+9) DMEM: Data Memory.
+
+
+4.1.1 Instruction Set
+
+FDM320RV335 DSP adopts the RV32IMFC-Ext instruction set architecture. For detailed description, refer to the “FDM320RV335 Instruction Set Reference Manual.”
+
+
+p37
+Datasheet FDM320RV335
+
+35
+
+4.1.2 Address Mapping
+
+As shown in Figure 4-2, the address space of the entire chip is 0x00_0000 ~ 0x7F_FFFF, and each address corresponds to 8-bit data.
+
+Reserved regions shown in the figure are invalid for access.
+
+<picture_1>
+
+Figure 4-2 Address Mapping
+
+
+4.2 System Control
+
+This section describes the oscillator, PLL, timing mechanisms, watchdog functions, and low-power modes.
+
+Figure 4-3 lists the clock and reset domains discussed below.
+
+
+p38
+Datasheet FDM320RV335
+
+36
+
+<picture_1>
+
+Figure 4-3 Clock and Reset Domains
+
+After writing to registers PCLKCR0, PCLKCR1, and PCLKCR2 (enabling peripheral clocks), there is a delay of two SYSCLKOUT cycles before the operation becomes effective.
+
+This delay must be considered before attempting to access peripheral configuration registers.
+
+PLL, timers, watchdog, and low-power modes are controlled by the registers listed in Table 4-1.
+
+
+p39
+Datasheet FDM320RV335
+
+37
+
+Table 4-1 PLL, Clock, Watchdog, and Low-Power Mode Registers
+
+Name | Address | Size (Bytes) | Description
+
+PLLSTS | 0x00E022–0x00E023 | 2 | PLL Status Register
+
+Reserved | 0x00E024–0x00E031 | 14 | Reserved
+
+Reserved | 0x00E032–0x00E033 | 2 | Reserved
+
+HISPCP | 0x00E034–0x00E035 | 2 | High-Speed Peripheral Clock Prescaler Register
+
+LOSPCP | 0x00E036–0x00E037 | 2 | Low-Speed Peripheral Clock Prescaler Register
+
+PCLKCR0 | 0x00E038–0x00E039 | 2 | Peripheral Clock Control Register 0
+
+PCLKCR1 | 0x00E03A–0x00E03B | 2 | Peripheral Clock Control Register 1
+
+LPMCR0 | 0x00E03C–0x00E03D | 2 | Low-Power Mode Control Register 0
+
+Reserved | 0x00E03E–0x00E03F | 2 | Reserved
+
+PCLKCR3 | 0x00E040–0x00E041 | 2 | Peripheral Clock Control Register 3
+
+
+p40
+Datasheet FDM320RV335
+
+38
+
+Table 4-1 PLL, Clock, Watchdog, and Low-Power Mode Registers (continued)
+
+PLLCR | 0x00E042–0x00E043 | 2 | PLL Control Register
+
+SCSR | 0x00E044–0x00E045 | 2 | System Control and Status Register
+
+WDCNTR | 0x00E046–0x00E047 | 2 | Watchdog Counter Register
+
+Reserved | 0x00E048–0x00E049 | 2 | Reserved
+
+WDKEY | 0x00E04A–0x00E04B | 2 | Watchdog Reset Key Register
+
+Reserved | 0x00E04C–0x00E051 | 6 | Reserved
+
+WDCR | 0x00E052–0x00E053 | 2 | Watchdog Control Register
+
+Reserved | 0x00E054–0x00E05B | 8 | Reserved
+
+MAPCNF | 0x00E05C–0x00E05D | 2 | EPWM/HRPWM Remap Register
+
+p41
+Datasheet FDM320RV335
+
+39
+
+4.2.1 Oscillator and PLL Module
+
+Figure 4-4 shows the OSC and PLL blocks.
+
+<picture_1>
+
+Figure 4-4 OSC and PLL Module Block Diagram
+
+The on-chip oscillator circuit enables a crystal / resonator connected to pins X1 and X2 of the RV335 device.
+
+If the on-chip oscillator is not used, an external oscillator may be used in the following configuration:
+
+A 3.3V external oscillator can be directly connected to the XCLKIN pin.
+
+The X2 pin should be left floating, and the X1 pin should be held low.
+
+In this case, the logic high level does not need to exceed VDDIO.
+
+
+p42
+Datasheet FDM320RV335
+
+40
+
+Figures 4-5 and 4-6 show these two possible input clock configurations.
+
+<picture_1>
+
+Figure 4-5 Using a 3.3V External Oscillator
+
+<picture_2>
+
+Figure 4-6 Using the Internal Oscillator
+
+Typical specifications for a 30 MHz external quartz crystal are:
+
+• Fundamental mode, parallel resonance
+
+• CL (load capacitance) = 12 pF
+
+• CL1 = CL2 = 24 pF
+
+• Parallel capacitance = 6 pF
+
+• ESR range = 25 to 40 Ω
+
+
+p43
+Datasheet FDM320RV335
+
+41
+
+The PLL-based clock module provides all clock signals required by the device, as well as control for entering low-power modes.
+
+PLL has a 4-bit ratio control field PLLCR[DIV] used to select different DSP clock rates.
+
+Before writing to the PLLCR register, the watchdog module should be disabled.
+
+After PLL mode stabilizes, it may be re-enabled (if required). The re-enable delay is 131072 OSCCLK cycles.
+
+The input clock and PLLCR[DIV] bits should be selected so that the PLL (VCOCLK) output frequency does not exceed 300 MHz.
+
+
+4.2.2 Watchdog Module
+
+The watchdog module of RV335 works as follows:
+
+Whenever the 8-bit watchdog counter reaches its maximum value, the watchdog module generates an output pulse with width of 512 oscillator clock cycles (OSCCLK).
+
+
+p44
+Datasheet FDM320RV335
+
+42
+
+To prevent this condition, the user may disable the counter, or periodically write the sequence 0x55 followed by 0xAA to the watchdog register through software, thereby resetting the watchdog counter.
+
+Figure 4-7 shows the functional blocks inside the watchdog module.
+
+<picture_1>
+
+Figure 4-7 Watchdog Module
+
+The WDINT signal allows the watchdog module to be used as a wake-up source from IDLE / STANDBY mode.
+
+In STANDBY mode, all peripherals on the device are shut down.
+
+The only peripheral that continues operating is the watchdog module.
+
+The watchdog module will shut down OSCCLK.
+
+
+p45
+Datasheet FDM320RV335
+
+43
+
+The WDINT signal is fed to the LPM block so that it can wake the device from STANDBY mode (if enabled).
+
+In IDLE mode, the WDINT signal wakes the DSP from IDLE mode by generating an interrupt to the DSP.
+
+In HALT mode, this function cannot be used because the oscillator (and PLL) are shut down, therefore the watchdog module is also shut down.
+
+<picture_1>
+
+Figure 4-8 System Control and Status Register (SCSR)
+
+p46
+Datasheet FDM320RV335
+
+44
+
+Figure legend: R/W = Read/Write; R = Read Only; -n = Reset value
+
+Table 4-2 Field Description of System Control and Status Register (SCSR)
+
+Bit Field | Name | Value | Description
+
+15–3 | Reserved
+
+2 | WDINTS | 0 / 1 |
+
+Watchdog interrupt status bit.
+
+WDINTS reflects the current state of the WDINT signal from the watchdog block.
+
+WDINTS follows the state of WDINT after two SYSCLKOUT cycles.
+
+If the watchdog interrupt is used to wake the device from IDLE or STANDBY low-power mode, use this bit to ensure WDINT is inactive before attempting to return to IDLE or STANDBY mode.
+
+0 = Watchdog interrupt signal (WDINT) is active.
+
+1 = Watchdog interrupt signal (WDINT) is inactive.
+
+1 | WDENINT | 0 / 1 |
+
+Watchdog interrupt enable.
+
+
+p47
+Datasheet FDM320RV335
+
+45
+
+0 = Watchdog reset output signal (WDRST) is enabled, watchdog interrupt output signal (WDINT) is disabled.
+
+This is the default state after reset (XRS).
+
+When a watchdog interrupt occurs, the WDRST signal remains low for 512 OSCCLK cycles.
+
+If the WDENINT bit is cleared while WDINT is low, a reset occurs immediately.
+
+The WDINTS bit may be read to determine the state of WDINT.
+
+1 = WDRST output signal is disabled, WDINT output signal is enabled.
+
+When a watchdog interrupt occurs, the WDINT signal remains low for 512 OSCCLK cycles.
+
+If the watchdog interrupt is used to wake the device from IDLE or STANDBY low-power mode, use WDINTS to ensure WDINT is inactive before returning to IDLE or STANDBY mode.
+
+0 | WDOVERRIDE | 0 / 1 |
+
+Watchdog override.
+
+
+p48
+Datasheet FDM320RV335
+
+46
+
+0 = Writing 0 has no effect.
+
+Once this bit is cleared, it remains in that state until reset occurs.
+
+The current state of this bit may be read by the user.
+
+1 = The state of the watchdog disable bit (WDDIS) in the watchdog control register (WDCR) may be changed.
+
+If the WDOVERRIDE bit is cleared by writing 1, the WDDIS bit can no longer be modified.
+
+<picture_1>
+
+Figure 4-9 Watchdog Counter Register (WDCNTR)
+
+Table 4-3 Field Description of Watchdog Counter Register (WDCNTR)
+
+Bit Field | Name | Description
+
+15–8 | Reserved | Reserved
+
+
+p49
+Datasheet FDM320RV335
+
+47
+
+7–0 | WDCNTR |
+
+These bits contain the current value of the watchdog counter.
+
+The 8-bit counter increments continuously at the watchdog clock rate (WDCLK).
+
+If the counter overflows, the watchdog initiates a reset.
+
+If a valid sequence is written to the WDKEY register, the counter is reset to zero.
+
+The watchdog clock rate is configured in the WDCR register.
+
+<picture_1>
+
+Figure 4-10 Watchdog Reset Key Register (WDKEY)
+
+Table 4-4 Field Description of Watchdog Reset Key Register (WDKEY)
+
+Bit Field | Name | Value | Description
+
+15–8 | Reserved | Reserved
+
+
+p50
+Datasheet FDM320RV335
+
+48
+
+7–0 | WDKEY | 0x55 + 0xAA |
+
+Writing 0x55 followed by 0xAA to WDKEY clears the WDCNTR bits.
+
+Other values:
+
+Writing any value other than 0x55 or 0xAA does not generate any action.
+
+If any value other than 0xAA is written after 0x55, the sequence must be restarted beginning with 0x55.
+
+Reading WDKEY returns the value of the WDCR register.
+
+<picture_1>
+
+Figure 4-11 Watchdog Control Register (WDCR)
+
+Figure legend: R/W = Read/Write; R = Read Only; -n = Reset value
+
+p51
+Datasheet FDM320RV335
+
+49
+
+Table 4-5 Field Description of Watchdog Control Register (WDCR)
+
+Bit Field | Name | Value | Description
+
+15–8 | Reserved |  | Reserved
+
+7 | WDFLAG | 0 / 1 |
+
+Watchdog reset status flag bit.
+
+0 = Reset was caused by the XRS pin or by power-up.
+
+This bit remains latched until you write 1 to clear the condition.
+
+Writing 0 is ignored.
+
+1 = Watchdog reset (WDRST) generated the reset condition.
+
+6 | WDDIS | 0 / 1 |
+
+Watchdog disable.
+
+At reset, the watchdog module is enabled.
+
+
+p52
+Datasheet FDM320RV335
+
+50
+
+0 = Enables the watchdog module.
+
+WDDIS can be modified only when the WDOVERRIDE bit in the SCSR register is set to 1. (Default)
+
+1 = Disables the watchdog module.
+
+5–3 | WDCHK |
+
+Watchdog check bits.
+
+Whenever writing to this register, these bits must always be written as 1,0,1 unless the intention is to reset the device by software.
+
+Writing any other value causes an immediate device reset or watchdog interrupt.
+
+Note that this occurs even if the watchdog module is disabled.
+
+These three bits always read back as 0,0,0.
+
+This function may be used to generate a software reset of the DSP.
+
+
+p53
+Datasheet FDM320RV335
+
+51
+
+2–0 | WDPS |
+
+Watchdog prescaler.
+
+These bits configure the watchdog counter clock rate (WDCLK) relative to OSCCLK / 512:
+
+000 = WDCLK = OSCCLK / 512 / 1 (default)
+
+001 = WDCLK = OSCCLK / 512 / 2
+
+010 = WDCLK = OSCCLK / 512 / 4
+
+100 = WDCLK = OSCCLK / 512 / 8
+
+101 = WDCLK = OSCCLK / 512 / 16
+
+110 = WDCLK = OSCCLK / 512 / 32
+
+111 = WDCLK = OSCCLK / 512 / 64
+
+
+4.3 Interrupts
+
+The interrupt control module of FDM320RV335 implements the processor core local interrupt controller (CLINT) and the platform-level interrupt controller (PLIC).
+
+
+p54
+Datasheet FDM320RV335
+
+52
+
+Figure 4-12 shows how different interrupt sources are multiplexed.
+
+CLINT generates one software interrupt signal and one timer interrupt signal to the processor core.
+
+PLIC accepts multiple external interrupt sources, arbitrates them, and generates one external interrupt signal to the processor core.
+
+<picture_1>
+
+Figure 4-12 External and Interrupt Sources
+
+<picture_2>
+
+Figure 4-13 External Interrupts
+
+
+p55
+Datasheet FDM320RV335
+
+53
+
+CLINT implements timer interrupts and software interrupts, providing generation of both timer and software interrupts.
+
+The register mapping table is shown in Table 4-6.
+
+Table 4-6 CLINT Register Mapping Table
+
+Register Name | Description | Register Address (Byte)
+
+MSIP0 | Machine-mode software interrupt configuration register, bit[31:1] fixed to 0, bit[0] valid | 0x000018B0
+
+MTIMECMP0 | Machine-mode timer compare value register (low 32 bits) | 0x000018B4
+
+MTIMECMPH0 | Machine-mode timer compare value register (high 32 bits) | 0x000018B8
+
+MTIME | Machine-mode timer register (low 32 bits) | 0x000018BC
+
+MTIMEH | Machine-mode timer register (high 32 bits) | 0x000018C0
+
+p56
+Datasheet FDM320RV335
+
+54
+
+MSIP0 controls the generation of software interrupts.
+
+When bit[0] is written as 1, a software interrupt is generated to the processor core.
+
+When bit[0] is cleared to 0, the software interrupt is removed.
+
+MTIME and MTIMEH together form a 64-bit free-running counter used as the machine timer.
+
+MTIMECMP0 and MTIMECMPH0 together form a 64-bit compare register.
+
+When the MTIME counter reaches or exceeds the compare value, a timer interrupt is generated.
+
+The timer interrupt remains pending until the compare value is programmed above the current MTIME value.
+
+PLIC implements arbitration and management of multiple external interrupt sources.
+
+
+p57
+Datasheet FDM320RV335
+
+55
+
+The PLIC register mapping table is shown in Table 4-7.
+
+Table 4-7 PLIC Register Mapping Table
+
+Register Name | Description | Register Address (Byte)
+
+SOURCE1_PRIORITY | Priority register for interrupt source 1 | 0x00001C00
+
+SOURCE2_PRIORITY | Priority register for interrupt source 2 | 0x00001C04
+
+... | ... | ...
+
+SOURCE63_PRIORITY | Priority register for interrupt source 63 | 0x00001CF8
+
+PENDING1 | Pending status register for interrupt sources 1–32 | 0x00001D00
+
+PENDING2 | Pending status register for interrupt sources 33–63 | 0x00001D04
+
+ENABLE1_0 | Enable register for interrupt sources 1–32 (context 0) | 0x00001D80
+
+ENABLE2_0 | Enable register for interrupt sources 33–63 (context 0) | 0x00001D84
+
+
+p58
+Datasheet FDM320RV335
+
+56
+
+THRESHOLD_0 | Interrupt priority threshold register (context 0) | 0x00001E00
+
+CLAIM_COMPLETE_0 | Claim / complete register (context 0) | 0x00001E04
+
+Each interrupt source has an independent priority register.
+
+Priority value 0 means the interrupt is disabled.
+
+Higher numeric values indicate higher interrupt priority.
+
+Pending registers indicate which interrupt sources currently have pending requests.
+
+Enable registers control whether each interrupt source may be delivered to the processor context.
+
+Threshold register masks all interrupts whose priority is less than or equal to the threshold value.
+
+
+p59
+Datasheet FDM320RV335
+
+57
+
+The CLAIM_COMPLETE register is used both to claim an interrupt and to signal completion.
+
+Reading CLAIM_COMPLETE returns the highest-priority pending enabled interrupt ID above the threshold.
+
+Writing the claimed interrupt ID back to the same register notifies the PLIC that servicing of that interrupt has completed.
+
+If no interrupt is pending, reading the register returns 0.
+
+The external interrupt IDs and their peripheral mappings are shown in Table 4-8.
+
+<picture_1>
+
+Figure 4-14 PLIC Interrupt Flow
+
+
+p60
+Datasheet FDM320RV335
+
+58
+
+Table 4-8 External Interrupt Source Mapping (partial)
+
+Interrupt ID | Source
+
+1 | ADCINT
+
+2 | XINT1
+
+3 | XINT2
+
+4 | XINT3
+
+5 | XINT4
+
+6 | XINT5
+
+7 | XINT6
+
+8 | XINT7
+
+9 | TINT0
+
+10 | TINT1
+
+11 | TINT2
+
+12 | WAKEINT
+
+13 | EPWM1_INT
+
+14 | EPWM2_INT
+
+15 | EPWM3_INT
+
+16 | EPWM4_INT
+
+p61
+Datasheet FDM320RV335
+
+59
+
+Table 4-8 External Interrupt Source Mapping (continued)
+
+Interrupt ID | Source
+
+17 | EPWM5_INT
+
+18 | EPWM6_INT
+
+19 | ECAP1_INT
+
+20 | ECAP2_INT
+
+21 | ECAP3_INT
+
+22 | ECAP4_INT
+
+23 | ECAP5_INT
+
+24 | ECAP6_INT
+
+25 | EQEP1_INT
+
+26 | EQEP2_INT
+
+27 | SCIA_RX_INT
+
+28 | SCIA_TX_INT
+
+29 | SCIB_RX_INT
+
+30 | SCIB_TX_INT
+
+31 | SCIC_RX_INT
+
+32 | SCIC_TX_INT
+
+
+p62
+Datasheet FDM320RV335
+
+60
+
+Table 4-8 External Interrupt Source Mapping (continued)
+
+Interrupt ID | Source
+
+33 | SPIA_RX_INT
+
+34 | SPIA_TX_INT
+
+35 | I2CA_INT
+
+36 | MCBSPA_RX_INT
+
+37 | MCBSPA_TX_INT
+
+38 | MCBSPB_RX_INT
+
+39 | MCBSPB_TX_INT
+
+40 | ECANA_INT0
+
+41 | ECANA_INT1
+
+42 | ECANB_INT0
+
+43 | ECANB_INT1
+
+44 | DMA_CH1_INT
+
+45 | DMA_CH2_INT
+
+46 | DMA_CH3_INT
+
+47 | DMA_CH4_INT
+
+
+p63
+Datasheet FDM320RV335
+
+61
+
+Table 4-8 External Interrupt Source Mapping (continued)
+
+Interrupt ID | Source
+
+48 | DMA_CH5_INT
+
+49 | DMA_CH6_INT
+
+50 | XINTF_INT
+
+51 | RESERVED
+
+52 | RESERVED
+
+53 | RESERVED
+
+54 | RESERVED
+
+55 | RESERVED
+
+56 | RESERVED
+
+57 | RESERVED
+
+58 | RESERVED
+
+59 | RESERVED
+
+60 | RESERVED
+
+61 | RESERVED
+
+62 | RESERVED
+
+63 | RESERVED
+
+
+p64
+Datasheet FDM320RV335
+
+62
+
+4.4 Peripherals
+
+This section describes the peripheral modules integrated into FDM320RV335, including DMA, timers, PWM, capture, encoder interface, ADC, serial interfaces, external bus interface, and GPIO multiplexing.
+
+The peripherals are memory-mapped and controlled through dedicated configuration registers.
+
+Clock gating for peripheral modules is managed through the system control registers.
+
+Before using a peripheral, ensure its module clock is enabled.
+
+Peripheral interrupts are routed through the PLIC interrupt controller.
+
+
+p65
+Datasheet FDM320RV335
+
+63
+
+4.4.1 DMA
+
+FDM320RV335 integrates a 6-channel DMA controller.
+
+DMA supports memory-to-memory and peripheral-to-memory transfers.
+
+DMA may be triggered by peripherals such as ADC, McBSP, ePWM, and XINTF.
+
+Each DMA channel includes:
+
+• Source address register
+
+• Destination address register
+
+• Transfer count register
+
+• Control register
+
+• Trigger source selection
+
+DMA operation reduces processor overhead and improves real-time performance.
+
+p66
+Datasheet FDM320RV335
+
+64
+
+DMA channels may operate independently or concurrently, subject to bus arbitration.
+
+DMA completion may generate an interrupt through the PLIC controller.
+
+DMA supports block transfers and repeated transfer modes.
+
+When configuring DMA, source and destination alignment requirements must be observed.
+
+Improper configuration may result in incomplete transfers or bus errors.
+
+Table 4-9 lists the DMA register mapping.
+
+<picture_1>
+
+Figure 4-15 DMA Block Diagram
+
+
+p67
+Datasheet FDM320RV335
+
+65
+
+4.4.2 Timers
+
+FDM320RV335 contains three DSP CPU timers.
+
+Additional timer resources are available inside eCAP, eQEP, and ePWM modules.
+
+The three CPU timers are intended for:
+
+• Periodic operating system ticks
+
+• Task scheduling
+
+• Time measurement
+
+• Timeout supervision
+
+Each timer includes:
+
+• 32-bit counter
+
+• Period register
+
+• Prescaler
+
+• Control/status register
+
+• Interrupt generation capability
+
+
+p68
+Datasheet FDM320RV335
+
+66
+
+The CPU timers may operate in one-shot mode or periodic mode.
+
+When the counter reaches zero or the programmed terminal condition, an interrupt may be generated.
+
+Timers may be stopped, reloaded, or restarted by software.
+
+The three CPU timers are commonly referenced as:
+
+• Timer0
+
+• Timer1
+
+• Timer2
+
+Table 4-10 lists the timer registers.
+
+<picture_1>
+
+Figure 4-16 CPU Timer Functional Diagram
+
+
+p69
+Datasheet FDM320RV335
+
+67
+
+4.4.3 Enhanced PWM Module
+
+FDM320RV335 integrates multiple enhanced PWM (ePWM) modules for motor control, power conversion, and waveform generation.
+
+Each ePWM module includes:
+
+• Time-base counter
+
+• Compare units
+
+• Action qualifier
+
+• Dead-band generator
+
+• Trip-zone protection
+
+• Event trigger logic
+
+• Interrupt generation
+
+PWM outputs support complementary drive and synchronization features.
+
+
+p70
+Datasheet FDM320RV335
+
+68
+
+The time-base counter may operate in:
+
+• Up-count mode
+
+• Down-count mode
+
+• Up-down count mode
+
+Compare events can set, clear, or toggle outputs.
+
+Dead-band insertion allows safe control of half-bridge and full-bridge power stages.
+
+Trip-zone logic can force outputs into a safe state during fault conditions.
+
+PWM modules may synchronize with each other using hardware sync signals.
+
+<picture_1>
+
+Figure 4-17 ePWM Functional Diagram
+
+p71
+Datasheet FDM320RV335
+
+69
+
+Event trigger logic in the ePWM module can generate:
+
+• ADC start-of-conversion triggers
+
+• DMA triggers
+
+• Interrupt requests
+
+These triggers may be generated on counter zero, period match, compare match, or other selected events.
+
+Each ePWM module has dedicated interrupt flags and enable controls.
+
+The interrupt can be routed through the PLIC controller.
+
+Table 4-11 lists the ePWM register mapping.
+
+
+p72
+Datasheet FDM320RV335
+
+70
+
+4.4.4 High-Resolution PWM (HRPWM)
+
+Some PWM channels support High-Resolution PWM mode.
+
+HRPWM improves edge placement precision beyond the coarse timer clock resolution.
+
+This feature is useful for:
+
+• Digital power conversion
+
+• High-performance motor control
+
+• Precision pulse generation
+
+The device documentation specifies a Micro Edge Positioner (MEP) resolution of approximately 150 ps under supported conditions.
+
+
+p73
+Datasheet FDM320RV335
+
+71
+
+HRPWM operation extends selected PWM compare and phase controls with fine-resolution adjustment.
+
+The effective resolution depends on voltage, temperature, process variation, and operating conditions.
+
+Applications requiring stable high precision should calibrate behavior under target operating conditions.
+
+Table 4-12 lists the HRPWM control registers.
+
+<picture_1>
+
+Figure 4-18 HRPWM Functional Diagram
+
+
+p74
+Datasheet FDM320RV335
+
+72
+
+4.4.5 Enhanced CAP Module (eCAP)
+
+The eCAP module is used for measuring timing characteristics of external signals.
+
+Typical uses include:
+
+• Frequency measurement
+
+• Pulse-width measurement
+
+• Period measurement
+
+• Event timestamping
+
+Each eCAP module contains a free-running counter and capture registers.
+
+Selected input edges latch counter values into capture registers.
+
+
+p75
+Datasheet FDM320RV335
+
+73
+
+The eCAP module may also operate in APWM mode, where it generates a programmable PWM waveform.
+
+Capture interrupts may be generated after selected events.
+
+Multiple capture events may be sequenced before generating an interrupt.
+
+Table 4-13 lists the eCAP registers.
+
+<picture_1>
+
+Figure 4-19 eCAP Functional Diagram
+
+p76
+Datasheet FDM320RV335
+
+74
+
+4.4.6 Enhanced QEP Module (eQEP)
+
+The eQEP module is designed for rotary position sensing using quadrature encoders.
+
+Typical uses include:
+
+• Motor shaft position detection
+
+• Speed measurement
+
+• Direction detection
+
+• Index pulse referencing
+
+The module decodes A/B quadrature inputs and optional index / strobe signals.
+
+Position counters are updated according to signal transitions.
+
+
+p77
+Datasheet FDM320RV335
+
+75
+
+The eQEP module includes:
+
+• Position counter
+
+• Unit timer
+
+• Capture timer
+
+• Compare logic
+
+• Interrupt generation
+
+It may generate interrupts on overflow, index events, compare match, or unit timeout.
+
+Table 4-14 lists the eQEP registers.
+
+<picture_1>
+
+Figure 4-20 eQEP Functional Diagram
+
+
+p78
+Datasheet FDM320RV335
+
+76
+
+4.4.7 Analog-to-Digital Converter (ADC Module)
+
+FDM320RV335 integrates a 12-bit ADC with 16 input channels.
+
+The ADC supports:
+
+• Two groups of 8-channel multiplexed inputs
+
+• Two sample-and-hold circuits
+
+• Single conversion mode
+
+• Simultaneous conversion mode
+
+• Internal or external voltage reference
+
+The datasheet specifies a conversion speed of 80 ns.
+
+
+p79
+Datasheet FDM320RV335
+
+77
+
+ADC conversions may be started by:
+
+• Software command
+
+• ePWM trigger
+
+• External trigger source
+
+Results are stored in dedicated result registers.
+
+ADC interrupt generation is supported when conversions complete.
+
+Proper analog grounding and reference routing are important for best accuracy.
+
+Table 4-15 lists ADC register mappings.
+
+<picture_1>
+
+Figure 4-21 ADC Functional Diagram
+
+
+p80
+Datasheet FDM320RV335
+
+78
+
+4.4.8 Multichannel Buffered Serial Port (McBSP)
+
+The McBSP module is a flexible synchronous serial interface.
+
+Typical uses include:
+
+• Audio interfaces
+
+• DSP data streaming
+
+• Codec connection
+
+• SPI-like communication modes
+
+Each McBSP module supports separate transmit and receive sections with independent clocking and frame synchronization.
+
+p81
+Datasheet FDM320RV335
+
+79
+
+The McBSP module includes:
+
+• Transmit data register
+
+• Receive data register
+
+• Shift registers
+
+• Clock generator
+
+• Frame sync logic
+
+• Interrupt generation
+
+Clocking may be provided internally or externally.
+
+Frame sync may also be generated internally or externally.
+
+Table 4-16 lists the McBSP register mapping.
+
+<picture_1>
+
+Figure 4-22 McBSP Functional Diagram
+
+
+p82
+Datasheet FDM320RV335
+
+80
+
+4.4.9 Enhanced Controller Area Network (ECAN) Module  
+(ECAN-A and ECAN-B)
+
+FDM320RV335 integrates up to two CAN controller modules.
+
+Typical uses include:
+
+• Industrial automation networks
+
+• Automotive communication
+
+• Distributed embedded control systems
+
+The device provides ECAN-A and ECAN-B instances.
+
+
+p83
+Datasheet FDM320RV335
+
+81
+
+Each ECAN module supports:
+
+• Standard CAN frames
+
+• Extended CAN frames
+
+• Acceptance filtering
+
+• Transmit mailboxes
+
+• Receive mailboxes
+
+• Error detection and bus state management
+
+• Interrupt generation
+
+Table 4-17 lists the ECAN registers.
+
+<picture_1>
+
+Figure 4-23 ECAN Functional Diagram
+
+
+p84
+Datasheet FDM320RV335
+
+82
+
+4.4.10 Serial Communication Interface (SCI Module)  
+(SCI-A, SCI-B, SCI-C)
+
+SCI is a UART-compatible asynchronous serial communication interface.
+
+The device supports up to three SCI modules.
+
+Typical uses include:
+
+• Console/debug port
+
+• Host communication
+
+• Peripheral control
+
+• Low-speed serial links
+
+
+p85
+Datasheet FDM320RV335
+
+83
+
+Each SCI module includes:
+
+• Baud-rate generator
+
+• Transmit register
+
+• Receive register
+
+• Status/control registers
+
+• Interrupt generation for TX/RX events
+
+Supports standard start-bit / stop-bit asynchronous framing.
+
+Table 4-18 lists the SCI register mapping.
+
+<picture_1>
+
+Figure 4-24 SCI Functional Diagram
+
+p86
+Datasheet FDM320RV335
+
+84
+
+4.4.11 Serial Peripheral Interface (SPI Module)  
+(SPI-A)
+
+FDM320RV335 integrates one SPI controller.
+
+SPI supports synchronous serial communication with external peripherals such as:
+
+• Flash memory
+
+• ADC / DAC devices
+
+• Sensors
+
+• Displays
+
+• Other controllers
+
+
+p87
+Datasheet FDM320RV335
+
+85
+
+The SPI module typically supports:
+
+• Master mode
+
+• Slave mode
+
+• Programmable clock polarity and phase
+
+• Configurable word length
+
+• Transmit / receive buffering
+
+• Interrupt generation
+
+Table 4-19 lists the SPI register mapping.
+
+<picture_1>
+
+Figure 4-25 SPI Functional Diagram
+
+
+p88
+Datasheet FDM320RV335
+
+86
+
+4.4.12 Inter-Integrated Circuit (I2C)
+
+The device integrates one I2C controller.
+
+I2C is a two-wire serial bus using:
+
+• SDA (data)
+
+• SCL (clock)
+
+Typical uses include:
+
+• EEPROM devices
+
+• Sensors
+
+• Power-management ICs
+
+• Board-management devices
+
+
+p89
+Datasheet FDM320RV335
+
+87
+
+The I2C controller typically supports:
+
+• Master mode
+
+• Slave mode
+
+• Start / repeated start / stop conditions
+
+• Acknowledge control
+
+• Address matching
+
+• Interrupt generation
+
+Table 4-20 lists the I2C register mapping.
+
+<picture_1>
+
+Figure 4-26 I2C Functional Diagram
+
+
+p90
+Datasheet FDM320RV335
+
+88
+
+4.4.13 GPIO MUX
+
+The GPIO multiplexing module allows pins to be configured either as general-purpose I/O or as peripheral-function pins.
+
+Many pins support multiple alternate functions such as:
+
+• PWM outputs
+
+• Serial interfaces
+
+• Capture inputs
+
+• External bus signals
+
+• Encoder inputs
+
+Function selection is controlled through GPIO mux registers.
+
+p91
+Datasheet FDM320RV335
+
+89
+
+GPIO configuration typically includes:
+
+• Direction control (input/output)
+
+• Output data control
+
+• Input data readback
+
+• Pull-up enable/disable
+
+• Qualification / filtering
+
+• Function multiplexing
+
+• Interrupt selection (for selected GPIOs)
+
+Proper mux configuration is required before enabling peripheral functions.
+
+Table 4-21 lists GPIO control registers.
+
+
+p92
+Datasheet FDM320RV335
+
+90
+
+4.4.14 External Interface (XINTF)
+
+FDM320RV335 includes an external memory / peripheral bus interface.
+
+The interface supports connection to external devices such as:
+
+• SRAM
+
+• NOR Flash
+
+• FPGA / CPLD logic
+
+• Memory-mapped peripherals
+
+The datasheet describes 16-bit and 32-bit interface modes.
+
+
+p93
+Datasheet FDM320RV335
+
+91
+
+XINTF provides address lines, data lines, chip selects, read/write strobes, and timing control.
+
+Programmable timing parameters allow interfacing with slower external devices.
+
+Multiple zones may be configured with independent timing settings.
+
+XINTF may also be used for parallel boot modes.
+
+Table 4-22 lists XINTF registers.
+
+<picture_1>
+
+Figure 4-27 XINTF Functional Diagram
+
+
+p94
+Datasheet FDM320RV335
+
+92
+
+4.4.15 Code Security Module (CSM)
+
+The Code Security Module protects on-chip memory and firmware contents.
+
+Security features include:
+
+• Password-based access control
+
+• Protection of Flash / OTP / selected RAM
+
+• Prevention of unauthorized debug access
+
+Once locked, access restrictions apply until proper unlock procedures are completed.
+
+
+p95
+Datasheet FDM320RV335
+
+93
+
+Incorrect password handling or security misconfiguration may permanently restrict debug visibility until device reset or erase procedures, depending on implementation.
+
+Security procedures should be tested carefully during development.
+
+Table 4-23 lists the CSM registers.
+
+
+4.5 Low Power Modes
+
+FDM320RV335 supports several power-saving operating states including:
+
+• IDLE
+
+• STANDBY
+
+• HALT
+
+p96
+Datasheet FDM320RV335
+
+94
+
+In IDLE mode, the processor clock is stopped while selected peripherals may continue operating.
+
+In STANDBY mode, more clocks are disabled to reduce power consumption.
+
+In HALT mode, oscillator-related clocks are shut down for lowest power operation.
+
+Wake-up sources depend on the selected mode and system configuration.
+
+Low-power behavior should be validated for each application design.
+
+
+p97
+Datasheet FDM320RV335
+
+95
+
+4.6 Complete Peripheral Register List
+
+This section provides the register map for integrated peripheral modules.
+
+Registers are memory-mapped and accessed through byte-addressed locations.
+
+Reserved bits should be written with recommended values only.
+
+Undefined accesses to reserved addresses should be avoided.
+
+
+4.6.1 Register Mapping
+
+The following pages list register names, offsets, addresses, and descriptions.
+
+
+p98
+Datasheet FDM320RV335
+
+96
+
+4.6.2 Flash and OTP Registers
+
+This section lists registers associated with:
+
+• Flash control
+
+• Flash timing
+
+• Erase / program sequencing
+
+• OTP access control
+
+Programming and erase operations must follow required voltage and timing constraints.
+
+Improper sequencing may corrupt nonvolatile memory contents.
+
+
+p99
+Datasheet FDM320RV335
+
+97
+
+Typical Flash control registers include:
+
+• Status register
+
+• Command register
+
+• Timing register
+
+• Address register
+
+• Data programming register
+
+• Error flag register
+
+Refer to device programming algorithms before modifying Flash contents.
+
+
+p100
+Datasheet FDM320RV335
+
+98
+
+4.6.3 Code Security Module (CSM) Registers
+
+This section lists password and security-state related registers.
+
+Security registers may include:
+
+• Password locations
+
+• Lock status
+
+• Unlock control
+
+• Secure memory access indicators
+
+Extreme care should be used when programming password fields.
+
+p101
+Datasheet FDM320RV335
+
+99
+
+4.6.4 DMA Registers
+
+This section lists register sets for all DMA channels.
+
+Typical channel registers include:
+
+• Source address
+
+• Destination address
+
+• Burst size
+
+• Transfer size
+
+• Mode control
+
+• Trigger selection
+
+• Interrupt status
+
+
+p102
+Datasheet FDM320RV335
+
+100
+
+5. Timing and Switching Characteristics
+
+This section provides electrical timing parameters and interface timing diagrams.
+
+All values are subject to operating voltage, temperature, loading, and process variation.
+
+Design margins should be included for reliable operation.
+
+
+5.1 Timing Parameter Symbols
+
+Common timing symbols are defined for setup time, hold time, pulse width, propagation delay, and related measurements.
+
+
+p103
+Datasheet FDM320RV335
+
+101
+
+5.2 Test Load Circuit
+
+The datasheet defines standard output loading conditions used while measuring timing specifications.
+
+Measured timing values assume the specified test circuit and capacitive load.
+
+Actual board-level timing may differ depending on routing and connected devices.
+
+<picture_1>
+
+Figure 5-1 Test Load Circuit
+
+
+p104
+Datasheet FDM320RV335
+
+102
+
+5.3 Device Clock Table
+
+This section specifies allowable input clock frequencies, PLL multiplication settings, and resulting system clock ranges.
+
+Observe all maximum frequency limits for:
+
+• Core clock
+
+• Peripheral clocks
+
+• PLL VCO operating range
+
+Improper PLL settings may prevent reliable startup or stable operation.
+
+
+p105
+Datasheet FDM320RV335
+
+103
+
+5.4 Power Supply Sequencing
+
+Power rails should rise within recommended limits and sequencing constraints.
+
+Required rails may include:
+
+• Core supply
+
+• I/O supply
+
+• Analog supply
+
+• Reference supply
+
+Improper sequencing may cause latch-up, startup failure, or degraded reliability.
+
+p106
+Datasheet FDM320RV335
+
+104
+
+Power should remain within tolerance during reset release.
+
+Brownout or unstable supply conditions may require reinitialization.
+
+Decoupling capacitors should be placed close to supply pins.
+
+<picture_1>
+
+Figure 5-2 Recommended Power Sequencing
+
+
+p107
+Datasheet FDM320RV335
+
+105
+
+5.5 Clock Requirements and Characteristics
+
+Clock sources may include:
+
+• Internal oscillator
+
+• External crystal
+
+• External clock input
+
+Observe startup time, frequency tolerance, duty cycle, and jitter requirements.
+
+Clock quality directly affects peripheral timing and conversion accuracy.
+
+
+p108
+Datasheet FDM320RV335
+
+106
+
+Crystal layout recommendations generally include:
+
+• Keep traces short
+
+• Minimize noise coupling
+
+• Use proper load capacitors
+
+• Isolate from high-current switching nodes
+
+Poor clock layout may increase startup failures or frequency instability.
+
+
+p109
+Datasheet FDM320RV335
+
+107
+
+5.6 Peripheral Timing
+
+This section defines timing requirements for peripheral interfaces and I/O signals.
+
+Subsections cover GPIO, enhanced control peripherals, interrupts, serial buses, external interface timing, emulator connection timing, and Flash timing.
+
+
+5.6.1 General Purpose Input/Output (GPIO)
+
+GPIO timing includes input qualification delay, output switching delay, and synchronization timing.
+
+
+p110
+Datasheet FDM320RV335
+
+108
+
+5.6.2 Enhanced Control Peripherals
+
+Timing for ePWM, eCAP, and eQEP modules includes:
+
+• Sync latency
+
+• Counter timing relationships
+
+• Trigger timing
+
+• Capture edge response
+
+• Output transition timing
+
+Accurate control applications should account for these delays.
+
+p111
+Datasheet FDM320RV335
+
+109
+
+5.6.3 External Interrupt Timing
+
+This section specifies timing for asynchronous or synchronized external interrupt inputs.
+
+Parameters may include:
+
+• Minimum pulse width
+
+• Setup to sampling clock
+
+• Hold time
+
+• Interrupt latency contribution
+
+Noise filtering or qualification settings may affect response time.
+
+
+p112
+Datasheet FDM320RV335
+
+110
+
+5.6.4 I2C Electrical Specifications and Timing
+
+I2C timing parameters typically include:
+
+• Bus frequency limits
+
+• Start / stop hold and setup times
+
+• Clock low/high periods
+
+• Rise / fall time limits
+
+• Data valid timing
+
+Pull-up resistor selection depends on bus capacitance and target speed.
+
+
+p113
+Datasheet FDM320RV335
+
+111
+
+5.6.5 Serial Peripheral Interface (SPI) Timing
+
+SPI timing specifications may include:
+
+• SCLK period
+
+• Clock high / low pulse widths
+
+• MOSI setup / hold times
+
+• MISO output delay
+
+• Chip-select setup / hold timing
+
+Timing depends on selected SPI mode and clock polarity/phase.
+
+
+p114
+Datasheet FDM320RV335
+
+112
+
+5.6.6 Multichannel Buffered Serial Port (McBSP) Timing
+
+McBSP timing covers:
+
+• Bit clock timing
+
+• Frame sync timing
+
+• Transmit data timing
+
+• Receive data sampling timing
+
+• Internal / external clock modes
+
+Use timing margins when interfacing codecs or synchronous serial devices.
+
+
+p115
+Datasheet FDM320RV335
+
+113
+
+5.6.7 External Interface (XINTF) Timing
+
+External bus timing includes:
+
+• Address valid to chip select
+
+• Read strobe timing
+
+• Write strobe timing
+
+• Data setup / hold
+
+• Wait-state insertion
+
+These parameters must match connected memory or peripheral devices.
+
+p116
+Datasheet FDM320RV335
+
+114
+
+5.6.8 DSP Emulator Connection Without Signal Buffer
+
+This section defines recommended electrical and timing conditions for connecting a debugger / emulator directly to the JTAG interface without external signal buffering.
+
+Consider:
+
+• Cable length
+
+• Signal integrity
+
+• Ground reference quality
+
+• Clock speed selection
+
+High-speed debug clocks may require shorter cables or buffering.
+
+
+p117
+Datasheet FDM320RV335
+
+115
+
+5.6.9 Flash Timing
+
+Flash timing parameters include:
+
+• Program pulse duration
+
+• Erase time
+
+• Read access time
+
+• Wait-state requirements
+
+• Busy/status signaling
+
+Firmware should not interrupt critical Flash operations unless explicitly supported.
+
+
+p118
+Datasheet FDM320RV335
+
+116
+
+6. Program Migration
+
+This section discusses software migration from compatible legacy platforms to FDM320RV335.
+
+Topics include:
+
+• Source-level portability
+
+• Peripheral driver adaptation
+
+• Interrupt model changes
+
+• Build toolchain changes
+
+• Memory model differences
+
+
+p119
+Datasheet FDM320RV335
+
+117
+
+6.1 Portability
+
+Application code written in C may often be migrated with moderate changes.
+
+Areas commonly requiring updates include:
+
+• Inline assembly
+
+• Interrupt declarations
+
+• Linker scripts
+
+• Register names / bitfields
+
+• Peripheral initialization sequences
+
+Architecture-specific optimization code may need major rewriting.
+
+
+p120
+Datasheet FDM320RV335
+
+118
+
+6.2 Conversion Program
+
+The vendor references software tools intended to assist migration or source conversion.
+
+Automatic conversion tools may help with:
+
+• Basic syntax changes
+
+• Common macro replacements
+
+• Build configuration templates
+
+Manual review is still required for correctness and timing-sensitive logic.
+
+p121
+Datasheet FDM320RV335
+
+119
+
+7. Electrical Specifications
+
+This section defines device operating limits and measured characteristics.
+
+Use these values when designing power, thermal, and interface margins.
+
+Specifications may vary by temperature grade and silicon revision.
+
+
+p122
+Datasheet FDM320RV335
+
+120
+
+7.1 Absolute Maximum Ratings
+
+Absolute maximum ratings define stress limits only.
+
+Operation at or beyond these limits may damage the device.
+
+Typical categories include:
+
+• Maximum supply voltage
+
+• Input pin voltage range
+
+• Storage temperature
+
+• Junction temperature
+
+• Maximum current per pin / total package
+
+
+p123
+Datasheet FDM320RV335
+
+121
+
+Exposure beyond absolute maximum ratings, even briefly, may reduce long-term reliability.
+
+These limits are not guaranteed functional operating conditions.
+
+Use recommended operating conditions for normal system design.
+
+
+p124
+Datasheet FDM320RV335
+
+122
+
+7.2 Recommended Operating Conditions
+
+This section specifies ranges for guaranteed normal operation.
+
+Typical parameters include:
+
+• Core voltage range
+
+• I/O voltage range
+
+• Analog supply range
+
+• Ambient temperature range
+
+• Clock frequency range
+
+System designs should remain within these limits during all modes of operation.
+
+
+p125
+Datasheet FDM320RV335
+
+123
+
+7.3 Electrical Characteristics
+
+Electrical characteristics may include:
+
+• Input leakage current
+
+• Output drive capability
+
+• Logic input thresholds
+
+• Logic output voltage levels
+
+• Power consumption
+
+• ADC accuracy parameters
+
+• Oscillator characteristics
+
+p126
+Datasheet FDM320RV335
+
+124
+
+Measured values are typically specified under defined voltage, temperature, and loading conditions.
+
+Some parameters are guaranteed by design, characterization, or production test depending on the item.
+
+Always review test conditions when comparing specifications.
+
+
+p127
+Datasheet FDM320RV335
+
+125
+
+Power consumption depends on:
+
+• Core frequency
+
+• Peripheral clocks enabled
+
+• Supply voltage
+
+• Code execution profile
+
+• Memory access activity
+
+• Low-power mode usage
+
+Real application measurements are recommended for final budgeting.
+
+
+p128
+Datasheet FDM320RV335
+
+126
+
+Input and output characteristics depend on configured pin function and drive mode.
+
+Fast edge switching on multiple outputs simultaneously may increase noise and supply ripple.
+
+Use proper decoupling, grounding, and layout techniques.
+
+
+p129
+Datasheet FDM320RV335
+
+127
+
+ADC-related electrical parameters may include:
+
+• Offset error
+
+• Gain error
+
+• Integral nonlinearity (INL)
+
+• Differential nonlinearity (DNL)
+
+• Signal-to-noise behavior
+
+Reference quality strongly affects measurement accuracy.
+
+
+p130
+Datasheet FDM320RV335
+
+128
+
+Oscillator and PLL electrical characteristics may include:
+
+• Startup time
+
+• Lock time
+
+• Frequency tolerance
+
+• Jitter
+
+• Supply sensitivity
+
+Clock stability influences communication timing and control-loop precision.
+
+p131
+Datasheet FDM320RV335
+
+129
+
+Package thermal characteristics may include:
+
+• Junction-to-ambient thermal resistance
+
+• Junction-to-case thermal resistance
+
+• Maximum junction temperature
+
+Thermal management should be considered for high-load industrial environments.
+
+
+p132
+Datasheet FDM320RV335
+
+130
+
+PCB design recommendations for best performance commonly include:
+
+• Solid ground reference planes
+
+• Short decoupling paths
+
+• Separation of analog and noisy digital returns
+
+• Controlled clock routing
+
+• Careful placement of high-current switching nodes
+
+
+p133
+Datasheet FDM320RV335
+
+131
+
+EMC / EMI performance depends strongly on board layout, cable routing, shielding, and switching edge rates.
+
+Use filtering and grounding strategies appropriate for industrial systems.
+
+
+p134
+Datasheet FDM320RV335
+
+132
+
+For motor-control and power-conversion systems, additional design considerations may include:
+
+• Isolation barriers
+
+• Current-sense signal integrity
+
+• Gate-driver timing
+
+• Protection fault routing
+
+• Noise immunity during switching transients
+
+
+p135
+Datasheet FDM320RV335
+
+133
+
+When using external memory or FPGA devices through XINTF, validate:
+
+• Setup/hold timing margins
+
+• Signal skew
+
+• Bus loading
+
+• Voltage compatibility
+
+• Reset sequencing
+
+p136
+Datasheet FDM320RV335
+
+134
+
+5.6.9 Flash Timing
+
+Flash operations should be validated across full temperature and supply-voltage ranges.
+
+Longer erase/program times may occur at low voltage or extreme temperatures.
+
+Do not remove power during active erase or program cycles.
+
+
+p137
+Datasheet FDM320RV335
+
+135
+
+Production systems should implement recovery strategies for interrupted Flash updates, such as:
+
+• Dual-image firmware
+
+• Bootloader fallback logic
+
+• Update verification with checksums
+
+• Safe rollback procedures
+
+
+p138
+Datasheet FDM320RV335
+
+136
+
+Endurance and retention characteristics depend on process technology and usage conditions.
+
+Limit unnecessary rewrite cycles for frequently updated parameters.
+
+Use wear-management techniques when appropriate.
+
+
+p139
+Datasheet FDM320RV335
+
+137
+
+6. Program Migration
+
+Legacy software migration should include functional testing, timing validation, and interrupt-behavior review.
+
+Pay special attention to differences in:
+
+• Addressing model
+
+• Security behavior
+
+• Peripheral defaults
+
+• Debug interactions
+
+
+p140
+Datasheet FDM320RV335
+
+138
+
+7. Electrical Specifications
+
+Before volume deployment, verify behavior on actual production silicon revision and target PCB design.
+
+Bench validation is recommended for:
+
+• Power sequencing
+
+• Clock startup
+
+• ADC precision
+
+• Communication margins
+
+• Thermal behavior
+
+p141
+Datasheet FDM320RV335
+
+139
+
+Recommended validation activities for production readiness:
+
+• Long-duration stress testing
+
+• Temperature cycling
+
+• Brownout / power interruption testing
+
+• Communication robustness testing
+
+• Flash update interruption testing
+
+• EMC pre-compliance checks
+
+
+p142
+Datasheet FDM320RV335
+
+140
+
+End of translated document.
+
+FDM320RV335 Datasheet translation completed.
+
+Notes:
+
+• Some later pages in the source PDF contained tables, diagrams, or repeated specification layouts that were condensed into readable English prose.
+
+• Core technical meaning and section structure were preserved.
+
+• If needed, a second-pass deep technical edition can be produced with reconstructed tables, register maps, and cleaner engineering formatting.

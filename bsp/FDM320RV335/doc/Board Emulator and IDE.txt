@@ -1,0 +1,9 @@
+Board, Emulator, and IDE Connectivity Test
+
+Connect the emulator to the computer and the board. Power on the board. Open CodeCanvas's tools -> test Connection. Use the default settings for Interface and Target (jlink.cfg and sc001.cfg). Test if the IDE and board are properly connected. This test may fail on Windows 11 computers; driver installation is required. First, open Device Manager -> Action -> Scan for hardware changes. Right-click on any device with a question mark -> Update Driver -> Automatic Driver Search. Then perform the emulator connectivity test again. If it still fails, use Zadig software to replace the driver as follows:
+
+1. Open Zadig software -> Options -> List All Devices
+
+2. Select BULK interface and CDC from the drop-down menu and replace the driver with WinUSB (v6.1.7600.16385).
+
+93109010980000000148838096

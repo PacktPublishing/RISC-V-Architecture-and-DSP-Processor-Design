@@ -1,0 +1,121 @@
+p2
+
+Instructions
+Welcome to our product! This manual aims to provide you with a quick start guide, helping you to understand our product concisely and comprehensively. Whether you are a first-time user or an experienced user, we hope this manual will provide you with clear and concise guidance, enabling you to fully utilize the product's features and obtain the best user experience.
+
+In this manual, you will follow us through the process of using the board and toolchain, from IDE installation, board connection, example import, program compilation, and program execution. We are committed to providing high-quality products and services; therefore, if you encounter any problems or need assistance during use, please feel free to contact our customer service team. We will be happy to provide you with support and assistance.
+
+Thank you again for choosing our product. We hope this manual will bring you convenience and help, and wish you a pleasant experience!
+
+Official Website: http://fdmtek.com/
+Forum: http://www.dsp-expert.com/
+Zhihu: https://www.zhihu.com/org/zhong-ke-ben-yuan
+
+p3
+
+Table of Contents
+Digital Signal Processors and Solutions Providers ............................................................................... - 1 -
+Introduction ...................................................................................................................................- 2 -
+I: Product List .................................................................................................................... - 4 -
+II: IDE Installation ......................................................................................................................... 6
+III: Example Import .........................................................................................................................7
+IV: Board Connection .........................................................................................................................8
+V: Program Compilation .........................................................................................................................9
+VI: Program Execution .......................................................................................................................10
+VII: Board Observation .......................................................................................................................10
+
+p4
+
+I. Product List
+
+Item No.
+Name
+Description
+1. FDMTEK_RV335.zip
+2. CodeCanvas_xxxx.zip
+RV335-SDK Package
+IDE Portable Package
+SDK Package List
+Level 1
+Level 2 Description
+RV335 Basic Examples and Related Peripheral Libraries
+Development System Board Example Experiment Library (adapted to development system boards)
+exampleDSP and FastRTS related signal processing and trigonometric function algorithm library examples
+include function declaration files
+lib function static library (users need to copy this static library to the project)
+device_support
+dsp_fastrts
+Hello_LED
+Documentation
+LED Flashing Program
+
+p5
+
+FDM320RV335 IDE User Manual.pdf
+FDM320RV335 Migration Guide.pdf
+FDM320RV335 Software Library User Manual.pdf
+FDM320RV335 Datasheet.pdf
+FDM320RV335 Example Usage Instructions.pdf
+FDM320RV335 Development System Board Schematic.pdf
+Driver Installation Instructions.pdf
+
+p6
+
+Part Two: IDE Installation
+
+The IDE is portable; you can directly extract the IDE compressed package to any location on your work computer and run the
+CodeCanvas.exe executable program.
+
+During the IDE launch process, you will be prompted to select a workspace; you can specify a custom path.
+
+Note:
+
+ The IDE currently only supports Windows 10 and later operating systems.
+
+ Avoid using Chinese characters or spaces in the extraction and workspace paths.
+
+p7
+
+Part 3: Example Program Import
+
+For your convenience, we have prepared a simple LED flashing program, Hello_LED, in the SDK directory.
+
+Open the IDE menu and select File -> Open Projects from File System or Archive. Click Directory
+
+picture
+
+Select the Hello_LED folder under the SDK directory.
+
+picture
+
+Click the Finish button to import the project.
+
+p8
+
+picture
+
+4. Board Connection
+Connect your board to your computer using the emulator. Pay attention to the cable connection between the emulator and the board.
+
+Connect the power adapter to the board and power it on. Press the power switch on the board to turn it on.
+
+p9
+
+picture
+
+5. Program Compilation
+Right-click the project, click "Build Project" to compile the project, generating an ELF binary file. The program compilation is successful.
+
+p10
+
+6. Running the Program
+Right-click the project, click Run As -> Application with GDB and OpenOCD.
+In the pop-up window, click Run to burn the program to the board and execute it.
+
+picture
+
+7. Observe the board. Check the board; the LEDs will start flashing in an orderly manner.
+
+p11
+
+
