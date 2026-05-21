@@ -81,10 +81,6 @@ By the end, you will understand key DSP hardware architecture and custom ISA des
 </details>
 
 
-
-    
-
-
 <details> 
   <summary><h2>Get to know Authors</h2></summary>
 
@@ -112,6 +108,8 @@ _Zhang Zhiwei_ Zhang Zhiwei is a Ph.D., Researcher, and Doctoral Supervisor at t
   <li><a href="https://github.com/PacktPublishing/RISC-V-Architecture-and-DSP-Processor-Design/tree/main/Chapter09">Chapter 09</a></li>
   <li><a href="https://github.com/PacktPublishing/RISC-V-Architecture-and-DSP-Processor-Design/tree/main/bsp">Board Support Package Code And Documentation</a></li>
 
+  <li><a href="https://github.com/PacktPublishing/RISC-V-Architecture-and-DSP-Processor-Design/releases/download/v1.0/linux_tools.tar.gz">Linux Developmen Tools (1.3 GB)</a></li>
+  <li><a href="https://github.com/PacktPublishing/RISC-V-Architecture-and-DSP-Processor-Design/releases/download/v1.0/windows_tools.zip">Windows Developmen Tools (639 MB)</a></li>
 </ul>
 
 </details>
