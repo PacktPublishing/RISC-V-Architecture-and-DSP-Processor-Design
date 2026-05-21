@@ -1,0 +1,2607 @@
+p1
+FDM320RV335 Software Library User Manual
+
+Digital Signal Processor and Solutions Provider
+
+Qingdao Benyuan Microelectronics Co., Ltd.
+
+FDM320RV335 Software Library User Manual
+
+Version V1.0
+
+
+p2
+FDM320RV335 Software Library User Manual
+
+
+p3
+FDM320RV335 Software Library User Manual
+
+- 1 -
+
+Table of Contents
+
+1. Overview ........................................ - 1 -
+
+1.1 Introduction to the FDM320RV335 Software Library .... - 1 -
+
+1.2 Software Library Directory Structure and Usage ...... - 1 -
+
+2. Digital Signal Processing Software Library .......... - 1 -
+
+2.1 Fixed-Point Digital Signal Processing Software Library ... - 2 -
+
+2.1.1 Fast Fourier Transform Function Library .......... - 2 -
+
+2.1.2 Filter Function Library ......................... - 8 -
+
+2.2 Floating-Point Digital Signal Processing Software Library ... - 11 -
+
+2.2.1 Fast Fourier Transform Function Library ......... - 11 -
+
+2.2.2 Filter Function Library ........................ - 18 -
+
+2.2.3 Vector Function Library ........................ - 20 -
+
+3. Mathematical Software Library ...................... - 34 -
+
+3.1 ATAN_F32 ......................................... - 35 -
+
+3.2 ATAN2_F32 ........................................ - 35 -
+
+3.3 COS_F32 .......................................... - 36 -
+
+3.4 DIV_F32 .......................................... - 36 -
+
+3.5 EXP_F32 .......................................... - 37 -
+
+3.6 ISQRT_F32 ........................................ - 37 -
+
+3.7 LOG_F32 .......................................... - 38 -
+
+3.8 POW_F32 .......................................... - 38 -
+
+3.9 SIN_F32 .......................................... - 39 -
+
+3.10 SINCOS_F32 ...................................... - 39 -
+
+3.11 SQRT_F32 ........................................ - 40
+
+
+p4
+FDM320RV335 Software Library User Manual
+
+- 1 -
+
+1. Overview
+
+1.1 Introduction to the FDM320RV335 Software Library
+
+The FDM320RV335 Software Library is a highly optimized collection of application functions written for FDM320RV335.
+
+It is divided into:
+
+- Digital Signal Processing Software Library
+- Mathematical Library
+
+The DSP software library is further divided into:
+
+- Floating-point library
+- Fixed-point library
+
+The library fully utilizes the floating-point processing unit and fixed-point processing unit of FDM320RV335.
+
+For user convenience, each function includes:
+
+- Assembly implementation
+- Reference implementation
+- Example program using the function
+
+All functions have been validated on FDM320RV335.
+
+1.2 Software Library Directory Structure and Usage
+
+The structure of the FDM320RV335 software library is shown in Figure 1-1.
+
+- performance: example applications for functions
+- source: assembly implementations of functions
+
+Assembly programs, reference programs, and sample programs share the same structure.
+
+dsp contains the DSP software library, including:
+
+- fixed-point library
+- floating-point library
+- FFT functions
+- Filter functions
+- Vector functions
+
+math contains the mathematical software library, including:
+
+- Trigonometric functions
+- Inverse trigonometric functions
+- Logarithmic functions
+- Exponential functions
+
+<picture_1>
+
+Figure 1-1 Software Library Directory Structure
+
+2. Digital Signal Processing Software Library
+
+The DSP Library is a highly optimized collection of digital signal processing application functions written for FDM320RV335.
+
+p5
+FDM320RV335 Software Library User Manual
+
+- 2 -
+
+These functions enable C/C++ programmers to fully utilize the performance potential of FDM320RV335.
+
+This document provides a description of every function in the library.
+
+Each library routine includes:
+
+- Assembly implementation
+- Reference implementation
+- Example program using the function
+
+For the current version, all examples were written for FDM320RV335 and tested on the FDM320RV335 platform.
+
+The DSP software library includes:
+
+- Fixed-point DSP software library
+- Floating-point DSP software library
+
+Among them:
+
+Fixed-point DSP software library includes:
+
+- Fast Fourier Transform Library (FFT Library)
+- Filter Library
+
+Floating-point DSP software library includes:
+
+- Fast Fourier Transform Library
+- Filter Library
+- Vector Library
+
+2.1 Fixed-Point Digital Signal Processing Software Library
+
+2.1.1 Fast Fourier Transform Function Library
+
+API Summary:
+
+Function Name | Function Interface
+
+FFT32_win | void FFT32_win(CFFT32_Handle);
+
+FFT32_brev | void FFT32_brev(int32_t *src, int32_t *dst, uint16_t size);
+
+FFT32_calc | void FFT32_calc(CFFT32_Handle);
+
+FFT32_init | void FFT32_init(CFFT32_Handle);
+
+FFT32_mag | void FFT32_mag(CFFT32_Handle);
+
+RFFT32_split | void RFFT32_split(RFFT32_Handle hnd);
+
+RFFT32_win | void RFFT32_win(RFFT32_Handle hnd);
+
+2.1.1.1 FFT32_win
+
+Function Description:
+
+This function applies window processing to the data in the computation buffer using:
+
+- input data pointed to by ipcbptr
+- window coefficients pointed to by winptr
+
+The coefficients are represented in Q31 format.
+
+This adjusts time-domain signal characteristics and reduces spectral leakage.
+
+Function Prototype:
+
+void CFFT32_win(CFFT32_Handle handle);
+
+Function Parameters:
+
+CFFT32_Handle is a pointer to the following structure:
+
+p6
+FDM320RV335 Software Library User Manual
+
+- 3 -
+
+```c
+typedef struct {
+    int32_t *ipcbptr;     // Pointer to input computation buffer
+    int32_t *tfptr;       // Pointer to twiddle factor table
+    int16_t size;         // FFT size (power of 2, maximum 4096)
+    int16_t nrstage;      // Number of FFT stages (=log2(size))
+    int16_t *magptr;      // Pointer to magnitude buffer
+    int16_t *winptr;      // Pointer to window coefficients
+    int16_t peakmag;      // Peak spectrum magnitude
+    int16_t peakfrq;      // Frequency of peak magnitude
+    int16_t ratio;        // ratio = 4096 / size
+    void (*init)(void);   // Pointer to FFT initialization function
+    void (*izero)(void *);// Pointer to imaginary-zeroing function
+    void (*calc)(void *); // Pointer to FFT calculation function
+    void (*mag)(void *);  // Pointer to FFT magnitude function
+    void (*win)(void *);  // Pointer to FFT window function
+} CFFT32;
+
+Function Return Value:
+
+This function has no return value.
+
+The computed result is stored at the location pointed to by ipcbptr.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+CFFT32_win | CFFT SIZE: 512 | 4674
+
+Notes:
+
+The size of buffers:
+
+*ipcbptr
+*magptr
+
+should be twice the FFT SIZE.
+
+p7
+FDM320RV335 Software Library User Manual
+
+4 -
+
+2.1.1.2 FFT32_brev
+
+Function Description:
+
+This function sequentially reads 2N real data samples and reorders them in bit-reversed order to satisfy the bit-reversal requirement of a complex FFT.
+
+This function performs bit-reversal only on:
+
+src[0], src[2], ...
+
+Function Prototype:
+
+void FFT32_brev(int32_t *src, int32_t *dst, uint16_t size);
+
+Function Parameters:
+
+src: Pointer to ordered data samples.
+
+dst: Pointer to destination array.
+The destination buffer size must be 2N.
+
+size: Number of actual data samples (N) to be bit-reversed in complex form.
+It must be a power of 2.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in the location pointed to by dst.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+FFT32_brev | RFFT SIZE: 256 | 1895
+
+2.1.1.3 FFT32_brev2
+
+Function Description:
+
+This function sequentially reads 2N real data samples and writes them in bit-reversed order.
+
+This function simultaneously reverses pairs:
+
+(k,k+1), (k+2,k+3), ...
+
+p8
+FDM320RV335 Software Library User Manual
+
+- 5 -
+
+Function Prototype:
+
+void FFT32_brev(int32_t *src, int32_t *dst, uint16_t size);
+
+Function Parameters:
+
+src: Pointer to ordered data samples.
+
+dst: Pointer to destination array.  
+Destination buffer size must be 2N.
+
+size: Number of real data samples (N) to be bit-reversed in complex form.  
+Must be a power of 2.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in the location pointed to by dst.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+FFT32_brev | RFFT SIZE: 256 | 1895
+
+2.1.1.4 FFT32_calc
+
+Function Description:
+
+This module performs an N-point FFT calculation on the bit-reversed data sequence pointed to by ipcbptr.
+
+Input format: Q30
+
+It generates ordered output data representing frequency-domain information.
+
+Output format: Q30
+
+The result overwrites the memory pointed to by ipcbptr.
+
+Function Prototype:
+
+void FFT32_calc(CFFT32_Handle handle);
+
+Function Parameters:
+
+Definition of CFFT32_Handle is shown in Section 2.1.1.1.
+
+Function Return Value:
+
+No return value.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+FFT32_calc | RFFT SIZE: 256 | 30846
+
+Notes:
+
+Both input and output data are in Q30 format.
+
+The computation buffer size is:
+
+2N long words
+
+(equal to twice the FFT length).
+
+
+p9
+FDM320RV335 Software Library User Manual
+
+- 6 -
+
+2.1.1.5 FFT32_init
+
+Function Description:
+
+The FFT initialization routine updates the twiddle-factor pointer using the address of the twiddle-factor table.
+
+Twiddle factors are stored at the address pointed to by tfptr.
+
+The table contains up to 3072 entries (32-bit words), supporting complex FFT calculations up to 4096 points.
+
+The table contains:
+
+3N / 4 entries
+
+where N is the maximum supported FFT size.
+
+Function Prototype:
+
+void FFT32_init(CFFT32_Handle);
+
+Function Parameters:
+
+Definition of CFFT32_Handle is shown in Section 2.1.1.1.
+
+Function Return Value:
+
+No return value.
+
+Its result is used to update the twiddle-factor table pointer tfptr in CFFT32.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+FFT32_init | RFFT SIZE: 256 | -
+
+p10
+FDM320RV335 Software Library User Manual
+
+- 7 -
+
+2.1.1.6 FFT32_mag
+
+Function Description:
+
+This routine obtains the magnitude squared of the complex FFT output (Q30 format), and stores the result (Q30 format) either in the computation buffer or in a dedicated array according to the magptr member of the complex FFT module.
+
+Function Prototype:
+
+void FFT32_mag(CFFT32_Handle hnd);
+
+Function Parameters:
+
+Definition of CFFT32_Handle is given in Section 2.1.1.1.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in the buffer pointed to by magptr.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+FFT32_mag | RFFT SIZE: 256 | 2078
+
+Notes:
+
+The magnitude output is stored in Q30 format.
+
+The array used to store the magnitude output must contain N long words (equal to the FFT length).
+
+2.1.1.7 RFFT32_split
+
+Function Description:
+
+The Split function obtains the first N/2 + 1 complex spectral bins of an N-point real input sequence from the output of an N-point complex FFT.
+
+Therefore, the computation buffer size is N + 2, storing N/2 + 1 spectrum bins in complex form.
+
+Function Prototype:
+
+void RFFT32_split(RFFT32_Handle hnd);
+
+Function Parameters:
+
+RFFT32_Handle is a pointer to the following structure:
+
+
+p11
+FDM320RV335 Software Library User Manual
+
+- 8 -
+
+```c
+typedef struct {
+    int32_t *ipcbptr;     // Pointer to input computation buffer
+    int32_t *tfptr;       // Pointer to twiddle factor table
+    int16_t size;         // FFT size (power of 2, maximum 4096)
+    int16_t nrstage;      // Number of FFT stages (=log2(size))
+    int16_t *magptr;      // Pointer to magnitude buffer
+    int16_t *winptr;      // Pointer to window coefficients
+    int16_t peakmag;      // Peak spectrum magnitude
+    int16_t peakfrq;      // Frequency of peak magnitude
+    int16_t ratio;        // Twiddle factor skip value
+    void (*init)(void);   // FFT initialization function pointer
+    void (*izero)(void *);// Imaginary-zeroing function pointer
+    void (*calc)(void *); // FFT calculation function pointer
+    void (*mag)(void *);  // FFT magnitude function pointer
+    void (*win)(void *);  // FFT window function pointer
+} RFFT32;
+
+Function Return Value:
+
+No return value.
+
+The result is stored in the buffer pointed to by magptr in CFFT32.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+RFFT32_split | RFFT SIZE: 256 | 9027
+
+p12
+FDM320RV335 Software Library User Manual
+
+- 9 -
+
+2.1.1.8 RFFT32_win
+
+Function Description:
+
+This function applies window processing to the data in the computation buffer using the window coefficients pointed to by the winptr member of the FFT module.
+
+Window coefficients are represented in Q30 format.
+
+The function adjusts time-domain signal characteristics and reduces spectral leakage.
+
+Function Prototype:
+
+void RFFT32_win(RFFT32_Handle hnd);
+
+Function Parameters:
+
+Definition of RFFT32_Handle is given in Section 2.1.1.6.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in the buffer pointed to by ipcbptr in RFFT32.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+RFFT32_win | RFFT SIZE: 256 | 5172
+
+Notes:
+
+Once the input data has been reordered into bit-reversed format, the window function should be called.
+
+2.1.2 Filter Function Library
+
+API Summary:
+
+Function Name | Function Interface
+
+FIR16_calc | void FIR16_calc(FIR16_handle hndFIR16);
+
+FIR32_calc | void FIR32_calc(FIR32_handle hndFIR32);
+
+IIR16_calc | void IIR16_calc(IIR16_handle hndIIR16);
+
+IIR32_calc | void IIR32_calc(IIR32_handle hndIIR32);
+
+2.1.2.1 FIR16_calc
+
+Function Description:
+
+This module implements a 16-bit Finite Impulse Response (FIR) filter.
+
+Function Prototype:
+
+void FIR16_calc(FIR16_handle hndFIR16);
+
+Function Parameters:
+
+FIR16_handle is a pointer to the following structure:
+
+
+p13
+FDM320RV335 Software Library User Manual
+
+- 10 -
+
+```c
+typedef struct {
+    int32_t *coeff_ptr;    // Pointer to filter coefficients
+    int32_t *dbuffer_ptr;  // Delay buffer pointer
+    int16_t cbindex;       // Circular buffer index
+    int16_t order;         // Filter order
+    fsize_t input;         // Latest input sample (fsize_t = int16_t)
+    fsize_t output;        // Filter output
+    void (*init)(void *);  // Initialization function pointer
+    void (*calc)(void *);  // Calculation function pointer
+} FIR16;
+
+Function Return Value:
+
+No return value.
+
+The result is stored in FIR16.output.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+FIR16_calc | FIR Order: 32, Signal Length: 128 | 133
+
+2.1.2.2 FIR32_calc
+
+Function Description:
+
+This module implements a 32-bit Finite Impulse Response (FIR) filter.
+
+Function Prototype:
+
+void FIR32_calc(FIR32_handle hndFIR32);
+
+p14
+FDM320RV335 Software Library User Manual
+
+- 11 -
+
+Function Parameters:
+
+FIR32_handle is a pointer to the following structure:
+
+```c
+typedef struct {
+    int32_t *coeff_ptr;    // Pointer to filter coefficients
+    int32_t *dbuffer_ptr;  // Delay buffer pointer
+    int16_t cbindex;       // Circular buffer index
+    int16_t order;         // Filter order
+    fsize_t input;         // Latest input sample (fsize_t = int32_t)
+    fsize_t output;        // Filter output
+    void (*init)(void *);  // Initialization function pointer
+    void (*calc)(void *);  // Calculation function pointer
+} FIR32;
+
+Function Return Value:
+
+No return value.
+
+The result is stored in FIR32.output.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+FIR32_calc | FIR Order: 43, Signal Length: 128 | 166
+
+2.1.2.3 IIR16_calc
+
+Function Description:
+
+This module implements a 16-bit Infinite Impulse Response (IIR) filter.
+
+Function Prototype:
+
+void IIR16_calc(IIR16_handle hndIIR16);
+
+Function Parameters:
+
+IIR16_handle is a pointer to the following structure:
+
+p15
+FDM320RV335 Software Library User Manual
+
+12 -
+typedef struct {
+    void (*init)(void *);   // Initialization function pointer
+    void (*calc)(void *);   // Calculation function pointer
+    int16_t *coeff_ptr;     // Pointer to filter coefficients
+    int16_t *dbuffer_ptr;   // Delay buffer pointer
+    uint16_t nbiq;          // Number of biquad filters
+    int16_t input;          // Latest input sample
+    int16_t isf;            // Input scale factor
+    uint16_t qfmat;         // Coefficient Q format
+    int16_t output;         // Filter output
+} IIR5BIQ16;
+
+Function Return Value:
+
+No return value.
+
+The result is stored in IIR5BIQ16.output.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+IIR16_calc | Signal Length: 100, Number of Biquads: 4 | 150
+
+p16
+FDM320RV335 Software Library User Manual
+
+- 13 -
+
+2.1.2.4 IIR32_calc
+
+Function Description:
+
+This module implements a 32-bit Infinite Impulse Response (IIR) filter.
+
+Function Prototype:
+
+void IIR32_calc(IIR32_handle hndIIR32);
+
+Function Parameters:
+
+IIR32_handle is a pointer to the following structure:
+
+```c
+typedef struct {
+    void (*init)(void *);    // Initialization function pointer
+    void (*calc)(void *);    // Calculation function pointer
+    fsize_t *coeff_ptr;      // Pointer to filter coefficients (fsize_t = int32_t)
+    fsize_t *dbuffer_ptr;    // Delay buffer pointer
+    uint16_t nbiq;           // Number of biquad filters
+    fsize_t input;           // Latest input sample
+    fsize_t isf;             // Input scale factor
+    fsize_t output32;        // Filter output (Q30)
+    int16_t output16;        // Filter output (Q15)
+    uint16_t qfmat;          // Coefficient Q format
+} IIR5BIQ32;
+
+Function Return Value:
+
+No return value.
+
+The result is stored in IIR5BIQ32.output32.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+IIR32_calc | Signal Length: 100, Number of Biquads: 4 | 150
+
+p17
+FDM320RV335 Software Library User Manual
+
+14 -
+
+2.2 Floating-Point Digital Signal Processing Software Library
+
+2.2.1 Fast Fourier Transform Function Library
+
+API Summary:
+
+Function Name | Function Interface
+
+CFFT_f32_brev | void CFFT_f32_brev(CFFT_F32_STRUCT_Handle hnd);
+
+CFFT_f32_mag | void CFFT_f32_mag(CFFT_F32_STRUCT_Handle hnd);
+
+CFFT_f32_phase | void CFFT_f32_phase(CFFT_F32_STRUCT_Handle hnd);
+
+CFFT_f32_sincostable | void CFFT_f32_sincostable(CFFT_F32_STRUCT_Handle hnd);
+
+CFFT_f32_unpack | void CFFT_f32_unpack(CFFT_F32_STRUCT_Handle hnd);
+
+CFFT_f32 | void CFFT_f32(CFFT_F32_STRUCT_Handle hnd);
+
+ICFFT_f32 | void ICFFT_f32(CFFT_F32_STRUCT_Handle hnd);
+
+RFFT_f32_mag | void RFFT_f32_mag(CFFT_F32_STRUCT_Handle hnd);
+
+RFFT_f32_phase | void RFFT_f32_phase(CFFT_F32_STRUCT_Handle hnd);
+
+RFFT_f32_sincostable | void RFFT_f32_sincostable(CFFT_F32_STRUCT_Handle hnd);
+
+RFFT_f32_win | void RFFT_f32_win(CFFT_F32_STRUCT_Handle hnd);
+
+RFFT_f32 | void RFFT_f32(CFFT_F32_STRUCT_Handle hnd);
+
+p18
+FDM320RV335 Software Library User Manual
+
+- 15 -
+
+2.2.1.1 CFFT_f32_brev
+
+Function Description:
+
+This routine rearranges an N-point complex data set into bit-reversed order.
+
+Function Prototype:
+
+void CFFT_f32_brev(CFFT_F32_STRUCT_Handle hnd);
+
+Function Parameters:
+
+CFFT_F32_STRUCT_Handle is a pointer to the following structure:
+
+```c
+typedef struct {
+    float *InPtr;          // Pointer to input buffer
+    float *OutPtr;         // Pointer to output buffer
+    float *CoefPtr;        // Pointer to twiddle factors
+    float *CurrentInPtr;   // Input buffer pointer for each FFT stage
+    float *CurrentOutPtr;  // Output buffer pointer for each FFT stage
+    uint16_t Stages;       // Number of FFT stages
+    uint16_t FFTSize;      // FFT size (number of complex data points)
+} CFFT_F32_STRUCT;
+
+Function Return Value:
+
+No return value.
+
+The result is stored in the location pointed to by OutPtr.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+CFFT_f32_brev | Test Size: 128 | 2661
+
+p19
+FDM320RV335 Software Library User Manual
+
+16 -
+
+2.2.1.2 CFFT_f32_mag
+
+Function Description:
+
+This routine calculates the magnitude of a complex FFT.
+
+Function Prototype:
+
+void CFFT_f32_mag(CFFT_F32_STRUCT_Handle hnd);
+
+Function Parameters:
+
+Definition of CFFT_F32_STRUCT_Handle is given in Section 2.2.1.1.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in the location pointed to by OutPtr.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+CFFT_f32_mag | Test Size: 128 | 2141
+
+2.2.1.3 CFFT_f32_phase
+
+Function Description:
+
+Complex FFT phase.
+
+Function Prototype:
+
+void CFFT_f32_phase(CFFT_F32_STRUCT_Handle hnd);
+
+Function Parameters:
+
+Definition of CFFT_F32_STRUCT_Handle is given in Section 2.2.1.1.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in the location pointed to by OutPtr.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+CFFT_f32_phase | Test Size: 128 | 10152
+
+p20
+FDM320RV335 Software Library User Manual
+
+- 17 -
+
+2.2.1.4 CFFT_f32_sincostable
+
+Function Description:
+
+Generates twiddle factors for the complex FFT.
+
+Function Prototype:
+
+void CFFT_f32_sincostable(CFFT_F32_STRUCT_Handle hnd);
+
+Function Parameters:
+
+Definition of CFFT_F32_STRUCT_Handle is given in Section 2.2.1.1.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in the location pointed to by CoefPtr.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+CFFT_f32_sincostable | Test Size: 128 | 267656
+
+2.2.1.5 CFFT_f32_unpack
+
+Function Description:
+
+Unpacks the output of an N-point complex FFT to obtain the FFT of a 2N-point real sequence.
+
+Function Prototype:
+
+void CFFT_f32_unpack(CFFT_F32_STRUCT_Handle hnd);
+
+Function Parameters:
+
+Definition of CFFT_F32_STRUCT_Handle is given in Section 2.2.1.1.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in the location pointed to by OutPtr.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+CFFT_f32_unpack | Test Size: 256 | 4431
+
+
+p21
+FDM320RV335 Software Library User Manual
+
+- 18 -
+
+2.2.1.6 CFFT_f32
+
+Function Description:
+
+Complex Fast Fourier Transform.
+
+This routine computes a 32-bit floating-point FFT of N-point complex input data where:
+
+N = 2^n, n = 5 : 10
+
+Function Prototype:
+
+void CFFT_f32(CFFT_F32_STRUCT_Handle hnd);
+
+Function Parameters:
+
+Definition of CFFT_F32_STRUCT_Handle is given in Section 2.2.1.1.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in the location pointed to by OutPtr.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+CFFT_f32 | Test Size: 128 | 17577
+
+p22
+FDM320RV335 Software Library User Manual
+
+- 19 -
+
+2.2.1.7 ICFFT_f32
+
+Function Description:
+
+Inverse complex FFT.
+
+This routine computes a 32-bit floating-point inverse FFT for N-point complex input data where:
+
+N = 2^n, n = 5 : 10
+
+It is implemented using the forward FFT:
+
+1. Swap real and imaginary parts of the input.
+2. Run forward FFT.
+3. Swap real and imaginary parts of the output.
+
+Function Prototype:
+
+void ICFFT_f32(CFFT_F32_STRUCT_Handle hnd);
+
+Function Parameters:
+
+Definition of CFFT_F32_STRUCT_Handle is given in Section 2.2.1.1.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in the location pointed to by OutPtr.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+ICFFT_f32 | Test Size: 1024 | 64436
+
+
+p23
+FDM320RV335 Software Library User Manual
+
+- 20 -
+
+2.2.1.8 RFFT_f32_mag
+
+Function Description:
+
+This function calculates the magnitude of a real FFT.
+
+Function Prototype:
+
+void RFFT_f32_mag(CFFT_F32_STRUCT_Handle hnd);
+
+Function Parameters:
+
+Definition of CFFT_F32_STRUCT_Handle is given in Section 2.2.1.1.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in the location pointed to by OutPtr.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+RFFT_f32_mag | Test Size: 256 | 4218
+
+p24
+FDM320RV335 Software Library User Manual
+
+- 21 -
+
+2.2.1.9 RFFT_f32_phase
+
+Function Description:
+
+Real FFT phase.
+
+Function Prototype:
+
+void RFFT_f32_phase(CFFT_F32_STRUCT_Handle hnd);
+
+Function Parameters:
+
+Definition of CFFT_F32_STRUCT_Handle is given in Section 2.2.1.1.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in the location pointed to by OutPtr.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+RFFT_f32_phase | Test Size: 256 | 21467
+
+2.2.1.10 RFFT_f32_sincostable
+
+Function Description:
+
+Generates twiddle factors for the real FFT.
+
+Function Prototype:
+
+void RFFT_f32_sincostable(CFFT_F32_STRUCT_Handle hnd);
+
+Function Parameters:
+
+Definition of CFFT_F32_STRUCT_Handle is given in Section 2.2.1.1.
+
+
+p25
+FDM320RV335 Software Library User Manual
+
+- 22 -
+
+Function Return Value:
+
+No return value.
+
+The result is stored in the location pointed to by CoefPtr.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+RFFT_f32_sincostable | Test Size: 256 | 267656
+
+2.2.1.11 RFFT_f32_win
+
+Function Description:
+
+Window function for 32-bit real FFT.
+
+Function Prototype:
+
+void RFFT_f32_win(CFFT_F32_STRUCT_Handle hnd);
+
+Function Parameters:
+
+Definition of CFFT_F32_STRUCT_Handle is given in Section 2.2.1.1.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in the location pointed to by InPtr.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+RFFT_f32_win | Test Size: 1024 | 1197
+
+p26
+FDM320RV335 Software Library User Manual
+
+- 23 -
+
+2.2.1.12 RFFT_f32
+
+Function Description:
+
+Real Fast Fourier Transform (RFFT).
+
+This routine computes a 32-bit floating-point FFT of N-point real input data where:
+
+N = 2^n, n = 5 : 10
+
+The function performs bit-reversed reordering of the input during the calculations of stages 1, 2, and 3.
+
+This routine uses two buffers in ping-pong mode:
+
+After each FFT stage, the output buffer and input buffer become the input and output buffers for the next stage.
+
+Function Prototype:
+
+void RFFT_f32(CFFT_F32_STRUCT_Handle hnd);
+
+Function Parameters:
+
+Definition of CFFT_F32_STRUCT_Handle is given in Section 2.2.1.1.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in the location pointed to by OutPtr.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+RFFT_f32 | Test Size: 256 | 18509
+
+
+p27
+FDM320RV335 Software Library User Manual
+
+- 24 -
+
+2.2.2 Filter Function Library
+
+API Summary:
+
+Function Name | Function Interface
+
+FIR_f32_calc | void FIR_f32_calc(FIR_f32_Handle hndFIR_f32);
+
+IIR_f32_calc | void IIR_f32_calc(IIR_f32_Handle hndIIR_f32);
+
+2.2.2.1 FIR_f32_calc
+
+Function Description:
+
+This module implements a Finite Impulse Response (FIR) filter.
+
+Function Prototype:
+
+void FIR_f32_calc(FIR_f32_Handle hndFIR_f32);
+
+Function Parameters:
+
+FIR_f32_Handle is a pointer to the following structure:
+
+p28
+FDM320RV335 Software Library User Manual
+
+- 25 -
+
+```c
+typedef struct {
+    float *coeff_ptr;      // Pointer to filter coefficients
+    float *dbuffer_ptr;    // Delay buffer pointer
+    int cbindex;           // Circular buffer index
+    int order;             // Filter order
+    float input;           // Latest input sample
+    float output;          // Filter output
+    void (*init)(void *);  // Initialization function pointer
+    void (*calc)(void *);  // Calculation function pointer
+    float *in_ptr;         // Can be initialized to FIRstate
+} FIR_f32;
+
+Function Return Value:
+
+No return value.
+
+The result is stored in FIR_f32.output.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+FIR_f32_calc | Test Size: 256, order: 64 | 614
+
+2.2.2.2 IIR_f32_calc
+
+Function Description:
+
+This module implements an Infinite Impulse Response (IIR) filter.
+
+Function Prototype:
+
+void IIR_f32_calc(IIR_f32_Handle hndIIR_f32);
+
+Function Parameters:
+
+IIR_f32_Handle is a pointer to the following structure:
+
+p29
+FDM320RV335 Software Library User Manual
+
+26 -
+typedef struct {
+    float *p_coeff_A;      // Pointer to denominator coefficients
+    float *p_coeff_B;      // Pointer to numerator coefficients
+    float *p_dbuffer;      // Delay buffer pointer
+    float *p_input;        // Pointer to latest input sample
+    float *p_output;       // Pointer to filter output
+    float *p_scale;        // Pointer to biquad scale values
+    uint16_t order;        // Filter order
+    void (*init)(void *);  // Initialization function pointer
+    void (*calc)(void *);  // Calculation function pointer
+} IIR_f32;
+
+Function Return Value:
+
+No return value.
+
+The result is stored in IIR_f32.output.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+IIR_f32_calc | Test Size: 256, Filter Order: 6 | 199
+
+p30
+FDM320RV335 Software Library User Manual
+
+- 27 -
+
+2.2.3 Vector Function Library
+
+API Summary:
+
+Function Name | Function Interface
+
+abs_SP_CV | void abs_SP_CV(float32 *y, const complex_float *x, const Uint16 N);
+
+add_SP_CSxCV | void add_SP_CSxCV(complex_float *y, const complex_float *x, const complex_float c, const Uint16 N);
+
+add_SP_CVxCV | void add_SP_CVxCV(complex_float *y, const complex_float *w, const complex_float *x, const Uint16 N);
+
+iabs_SP_CV | void iabs_SP_CV(float32 *y, const complex_float *x, const Uint16 N);
+
+mac_SP_CVxCV | complex_float mac_SP_CVxCV(const complex_float *w, const complex_float *x, const uint16_t N);
+
+mac_SP_RVxCV | complex_float mac_SP_RVxCV(const complex_float *w, const float32 *x, const Uint16 N);
+
+maxidx_SP_RV | Uint16 maxidx_SP_RV(const float32 *x, const Uint16 N);
+
+mean_SP_CV_2 | complex_float mean_SP_CV_2(const complex_float *x, const Uint16 N);
+
+median_SP_RV | float median_SP_RV(float *, uint16_t);
+
+mpy_SP_CSxCS | complex_float mpy_SP_CSxCS(const complex_float w, const complex_float x);
+
+mpy_SP_CVxCV | void mpy_SP_CVxCV(complex_float *y, const complex_float *w, const complex_float *x, const Uint16 N);
+
+
+p31
+FDM320RV335 Software Library User Manual
+
+- 28 -
+
+mpy_SP_CVxCVC | void mpy_SP_CVxCVC(complex_float *y, const complex_float *w, const complex_float *x, const Uint16 N);
+
+mpy_SP_RMxRM | void mpy_SP_RMxRM(float *y, const float *w, const float *x, const uint16_t m, const uint16_t n, const uint16_t p);
+
+mpy_SP_RSxRV | void mpy_SP_RSxRV(float32 *y, const float32 *x, const float32 c, const Uint16 N);
+
+mpy_SP_RSxRVxRV | void mpy_SP_RSxRVxRV(float32 *y, const float32 *w, const float32 *x, const float32 c, const Uint16 N);
+
+mpy_SP_RVxCV | void mpy_SP_RVxCV(complex_float *y, const complex_float *w, const float32 *x, const Uint16 N);
+
+mpy_SP_RVxRV | void mpy_SP_RVxRV(float32 *y, const float32 *w, const float32 *x, const Uint16 N);
+
+qsort_SP_RV | void qsort_SP_RV(void *base, const uint16_t nmemb);
+
+rnd_SP_RS | float32 rnd_SP_RS(const float32 x);
+
+sub_SP_CSxCV | void sub_SP_CSxCV(complex_float *y, const complex_float *x, const complex_float c, const Uint16 N);
+
+sub_SP_CVxCV | void sub_SP_CVxCV(complex_float *y, const complex_float *w, const complex_float *x, const Uint16 N);
+
+p32
+FDM320RV335 Software Library User Manual
+
+- 29 -
+
+2.2.3.1 abs_SP_CV
+
+Function Description:
+
+Calculate the absolute value (magnitude) of a complex vector.
+
+y = sqrt(xr^2 + xi^2)
+
+Function Prototype:
+
+void abs_SP_CV(float32 *y, const complex_float *x, const Uint16 N);
+
+Function Parameters:
+
+y: Output array
+
+x: Input array
+
+Definition of complex_float:
+
+```c
+typedef struct {
+    float32 dat[2];   // dat[0] = real part, dat[1] = imaginary part
+} complex_float;
+
+N: Length of arrays x and y.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in array y.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+abs_SP_CV | vector size: [99,99,SIZE=98] | 1913
+
+p33
+FDM320RV335 Software Library User Manual
+
+30 -
+
+2.2.3.2 add_SP_CSxCV
+
+Function Description:
+
+Complex scalar plus complex vector:
+
+yr = xr + cr
+yi = xi + ci
+
+Function Prototype:
+
+void add_SP_CSxCV(complex_float *y, const complex_float *x,
+const complex_float c, const Uint16 N);
+
+Function Parameters:
+
+y: Output complex array
+
+x: Input complex array
+
+c: Input complex scalar
+
+N: Length of arrays x and y.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in array y.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+add_SP_CSxCV | vector size: [64,64,1,SIZE=64] | 797
+
+p34
+FDM320RV335 Software Library User Manual
+
+- 31 -
+
+2.2.3.3 add_SP_CVxCV
+
+Function Description:
+
+Complex vector plus complex vector:
+
+yr = wr + xr  
+yi = wi + xi
+
+Function Prototype:
+
+void add_SP_CVxCV(complex_float *y,
+                  const complex_float *w,
+                  const complex_float *x,
+                  const Uint16 N);
+
+Function Parameters:
+
+y: Output complex array
+
+w: First input complex array
+
+x: Second input complex array
+
+N: Length of arrays x, w, y.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in array y.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+add_SP_CVxCV | vector size: [64,64,64,SIZE=64] | 923
+
+
+p35
+FDM320RV335 Software Library User Manual
+
+- 32 -
+
+2.2.3.4 iabs_SP_CV
+
+Function Description:
+
+Inverse absolute value of a complex vector:
+
+y = 1 / sqrt(xr*xr + xi*xi)
+
+Function Prototype:
+
+void iabs_SP_CV(float32 *y, const complex_float *x, const Uint16 N);
+
+Function Parameters:
+
+y: Output array
+
+x: Input array
+
+Definition of complex_float: see Section 2.2.3.1
+
+N: Length of arrays x and y.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in array y.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+iabs_SP_CV | vector size: [99,99,SIZE=98] | 3283
+
+p36
+FDM320RV335 Software Library User Manual
+
+- 33 -
+
+2.2.3.5 mac_SP_CVxCV
+
+Function Description:
+
+Multiply-accumulate of complex vector and complex vector.
+
+Real part:
+yr = Σ(wr*xr - wi*xi)
+
+Imaginary part:
+yi = Σ(wr*xi + wi*xr)
+
+Function Prototype:
+
+complex_float mac_SP_CVxCV(const complex_float *w,
+                           const complex_float *x,
+                           const uint16_t N);
+
+Function Parameters:
+
+w: First input complex array
+
+x: Second input complex array
+
+N: Length of arrays w and x.
+
+Function Return Value:
+
+Computed complex result.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+mac_SP_CVxCV | vector size: [256,128,SIZE=64] | 943
+
+
+p37
+FDM320RV335 Software Library User Manual
+
+- 34 -
+
+2.2.3.6 mac_SP_RVxCV
+
+Function Description:
+
+Multiply-accumulate of real vector and complex vector.
+
+Real part:
+yr = Σ(x * wr)
+
+Imaginary part:
+yi = Σ(x * wi)
+
+Function Prototype:
+
+complex_float mac_SP_RVxCV(const complex_float *w,
+                           const float32 *x,
+                           const Uint16 N);
+
+Function Parameters:
+
+w: Input complex array
+
+x: Input real array
+
+N: Length of arrays w and x.
+
+Function Return Value:
+
+Computed result.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+mac_SP_RVxCV | vector size: [64,64,SIZE=64] | 554
+
+p38
+FDM320RV335 Software Library User Manual
+
+- 35 -
+
+2.2.3.7 maxidx_SP_RV
+
+Function Description:
+
+Index of the maximum value in a real array.
+
+Equivalent logic:
+
+```c
+if (x[i] > max) {
+    max = x[i];
+    idx = i;
+}
+
+Function Prototype:
+
+Uint16 maxidx_SP_RV(const float32 *x, const Uint16 N);
+
+Function Parameters:
+
+x: Input array
+
+N: Length of array x.
+
+Function Return Value:
+
+Index of the maximum value in x.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+maxidx_SP_RV | vector size: [100,SIZE=100] | 910
+
+p39
+FDM320RV335 Software Library User Manual
+
+36 -
+
+2.2.3.8 mean_SP_CV_2
+
+Function Description:
+
+Average values of the real and imaginary parts of a complex vector.
+
+Real part:
+yr = Σxr / N
+
+Imaginary part:
+yi = Σxi / N
+
+Function Prototype:
+
+complex_float mean_SP_CV_2(const complex_float *x, const Uint16 N);
+
+Function Parameters:
+
+x: Input complex array
+
+N: Length of array x.
+
+Function Return Value:
+
+Computed result.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+mean_SP_CV_2 | vector size: [100,SIZE=100] | 755
+
+p40
+FDM320RV335 Software Library User Manual
+
+- 37 -
+
+2.2.3.9 median_SP_RV
+
+Function Description:
+
+Median of a real floating-point array.
+
+The input array is not preserved.
+
+This routine uses a quick-select method based on the algorithm described in:
+
+Numerical Recipes in C, Second Edition  
+Cambridge University Press, 1992  
+Section 8.5  
+ISBN 0-521-43108-5
+
+Function Prototype:
+
+float median_SP_RV(float *, uint16_t);
+
+Function Parameters:
+
+x: Input array
+
+N: Length of array x.
+
+Function Return Value:
+
+Computed result.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+median_SP_RV | vector size: [100,SIZE=100] | 19753
+
+
+p41
+FDM320RV335 Software Library User Manual
+
+- 38 -
+
+2.2.3.10 mpy_SP_CSxCS
+
+Function Description:
+
+Complex multiplication of two floating-point complex numbers.
+
+Real part:
+yr = wr*xr - wi*xi
+
+Imaginary part:
+yi = wr*xi + wi*xr
+
+Function Prototype:
+
+complex_float mpy_SP_CSxCS(const complex_float w,
+                           const complex_float x);
+
+Function Parameters:
+
+w: First complex input
+
+x: Second complex input
+
+Function Return Value:
+
+Computed result.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+mpy_SP_CSxCS | vector size: [1,1] | 16
+
+p42
+FDM320RV335 Software Library User Manual
+
+- 39 -
+
+2.2.3.11 mpy_SP_CVxCV
+
+Function Description:
+
+Complex vector multiplied by complex vector.
+
+Real part:
+yr = wr*xr - wi*xi
+
+Imaginary part:
+yi = wr*xi + wi*xr
+
+Function Prototype:
+
+void mpy_SP_CVxCV(complex_float *y,
+                  const complex_float *w,
+                  const complex_float *x,
+                  const Uint16 N);
+
+Function Parameters:
+
+y: Result array
+
+w: First input array
+
+x: Second input array
+
+N: Length of arrays w, x, y.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in array y.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+mpy_SP_CVxCV | vector size: [64,64,SIZE=64] | 1507
+
+
+p43
+FDM320RV335 Software Library User Manual
+
+- 40 -
+
+2.2.3.12 mpy_SP_CVxCVC
+
+Function Description:
+
+Complex vector multiplied by conjugate complex vector.
+
+Conjugate:
+xcr = xr  
+xci = -xi
+
+Then:
+
+yr = wr*xcr - wi*xci
+
+yi = wr*xci + wi*xcr
+
+Function Prototype:
+
+void mpy_SP_CVxCVC(complex_float *y,
+                   const complex_float *w,
+                   const complex_float *x,
+                   const Uint16 N);
+
+Function Parameters:
+
+y: Result array
+
+w: First input array
+
+x: Second input array
+
+N: Length of arrays y, w, x.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in array y.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+mpy_SP_CVxCVC | vector size: [64,64,SIZE=64] | 1444
+
+p44
+FDM320RV335 Software Library User Manual
+
+- 41 -
+
+2.2.3.13 mpy_SP_RMxRM
+
+Function Description:
+
+Product of two real matrices:
+
+y[] = w[] * x[]
+
+Where:
+
+w[] dimensions = m x n  
+x[] dimensions = n x p  
+y[] dimensions = m x p
+
+Equivalent algorithm:
+
+```c
+for (i = 0; i < m; i++) {
+    for (j = 0; j < p; j++) {
+        *(y + i + j*p) = 0.0;
+        for (k = 0; k < n; k++) {
+            *(y + i + j*p) += *(w + i + k*m) *
+                              *(x + j*n + k);
+        }
+    }
+}
+
+Function Prototype:
+
+void mpy_SP_RMxRM(float *y,
+const float *w,
+const float *x,
+const uint16_t m,
+const uint16_t n,
+const uint16_t p);
+
+Function Parameters:
+
+y: Result matrix
+w: First input matrix
+x: Second input matrix
+
+p45
+FDM320RV335 Software Library User Manual
+
+42 -
+
+m: Matrix dimension m
+
+n: Matrix dimension n
+
+p: Matrix dimension p
+
+Function Return Value:
+
+No return value.
+
+The result is stored in array y.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+mpy_SP_RMxRM | vector size: [256,256,256,SIZE=16,SIZE=4,SIZE=16] | 14965
+
+2.2.3.14 mpy_SP_RSxRV
+
+Function Description:
+
+Product of real scalar and real vector:
+
+y = c * x
+
+Function Prototype:
+
+void mpy_SP_RSxRV(float32 *y,
+const float32 *x,
+const float32 c,
+const Uint16 N);
+
+p46
+FDM320RV335 Software Library User Manual
+
+- 43 -
+
+Function Parameters:
+
+y: Result array
+
+x: Input array
+
+c: Input scalar
+
+N: Length of arrays x and y.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in array y.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+mpy_SP_RSxRV | vector size: [64,64,1,SIZE=64] | 253
+
+2.2.3.15 mpy_SP_RSxRVxRV
+
+Function Description:
+
+Multiplication of real scalar, real vector, and real vector:
+
+y = c * w * x
+
+Function Prototype:
+
+void mpy_SP_RSxRVxRV(float32 *y,
+                     const float32 *w,
+                     const float32 *x,
+                     const float32 c,
+                     const Uint16 N);
+
+
+p47
+FDM320RV335 Software Library User Manual
+
+- 44 -
+
+Function Parameters:
+
+y: Result array
+
+w: First input array
+
+x: Second input array
+
+c: Input scalar
+
+N: Length of arrays w, x, y.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in array y.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+mpy_SP_RSxRVxRV | vector size: [64,64,64,1,SIZE=64] | 512
+
+2.2.3.16 mpy_SP_RVxCV
+
+Function Description:
+
+Multiplication of real vector and complex vector.
+
+Real part:
+yr = x * wr
+
+Imaginary part:
+yi = x * wi
+
+p48
+FDM320RV335 Software Library User Manual
+
+- 45 -
+
+Function Prototype:
+
+void mpy_SP_RVxCV(complex_float *y,
+                  const complex_float *w,
+                  const float32 *x,
+                  const Uint16 N);
+
+Function Parameters:
+
+y: Result complex array
+
+w: Input complex array
+
+x: Input real array
+
+N: Length of arrays w, x, y.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in array y.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+mpy_SP_RVxCV | vector size: [64,64,64,SIZE=64] | 669
+
+2.2.3.17 mpy_SP_RVxRV
+
+Function Description:
+
+Multiplication of real vector and real vector:
+
+y = w * x
+
+
+p49
+FDM320RV335 Software Library User Manual
+
+- 46 -
+
+Function Prototype:
+
+void mpy_SP_RVxRV(float32 *y,
+                  const float32 *w,
+                  const float32 *x,
+                  const Uint16 N);
+
+Function Parameters:
+
+y: Result real array
+
+w: First input real array
+
+x: Second input real array
+
+N: Length of arrays w, x, y.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in array y.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+mpy_SP_RVxRV | vector size: [64,64,64,SIZE=64] | 385
+
+2.2.3.18 qsort_SP_RV
+
+Function Description:
+
+Sort a real array.
+
+p50
+FDM320RV335 Software Library User Manual
+
+- 47 -
+
+Function Prototype:
+
+void qsort_SP_RV(void *base, const uint16_t nmemb);
+
+Function Parameters:
+
+base: Pointer to input array
+
+nmemb: Length of input array
+
+Function Return Value:
+
+No return value.
+
+The sorted array is stored in the original input location.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+qsort_SP_RV | vector size: [100,SIZE=100] | 33252
+
+2.2.3.19 rnd_SP_RS
+
+Function Description:
+
+Unbiased rounding of a floating-point scalar.
+
+Function Prototype:
+
+float32 rnd_SP_RS(const float32 x);
+
+Function Parameters:
+
+x: Input floating-point value.
+
+Function Return Value:
+
+Rounded result.
+
+
+p51
+FDM320RV335 Software Library User Manual
+
+- 48 -
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+rnd_SP_RS | Input 1 Number | 93
+
+2.2.3.20 sub_SP_CSxCV
+
+Function Description:
+
+Subtract a complex scalar from a complex vector.
+
+Real part:
+yr = xr - cr
+
+Imaginary part:
+yi = xi - ci
+
+Function Prototype:
+
+void sub_SP_CSxCV(complex_float *y,
+                  const complex_float *x,
+                  const complex_float c,
+                  const Uint16 N);
+
+Function Parameters:
+
+y: Result complex array
+
+x: Input complex array
+
+c: Input complex scalar
+
+p52
+FDM320RV335 Software Library User Manual
+
+- 49 -
+
+N: Length of arrays x and y.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in array y.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+sub_SP_CSxCV | vector size: [64,64,1,SIZE=64] | 544
+
+2.2.3.21 sub_SP_CVxCV
+
+Function Description:
+
+Subtraction of complex vector and complex vector.
+
+Real part:
+yr = wr - xr
+
+Imaginary part:
+yi = wi - xi
+
+Function Prototype:
+
+void sub_SP_CVxCV(complex_float *y,
+                  const complex_float *w,
+                  const complex_float *x,
+                  const Uint16 N);
+
+
+p53
+FDM320RV335 Software Library User Manual
+
+- 50 -
+
+Function Parameters:
+
+y: Result complex array
+
+w: First input complex array
+
+x: Second input complex array
+
+N: Length of arrays w, x, y.
+
+Function Return Value:
+
+No return value.
+
+The result is stored in array y.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+sub_SP_CVxCV | vector size: [64,64,64,SIZE=64] | 737
+
+3. Mathematical Software Library
+
+API Summary:
+
+Function Name | Function Interface
+
+atan_f32 | fsize_t atan_f32(const fsize_t x);
+
+atan2_f32 | fsize_t atan2_f32(const fsize_t y, const fsize_t x);
+
+p54
+FDM320RV335 Software Library User Manual
+
+- 51 -
+
+cos_f32 | fsize_t cos_f32(const fsize_t theta);
+
+div_f32 | fsize_t div_f32(const fsize_t num, const fsize_t den);
+
+exp_f32 | fsize_t exp_f32(const fsize_t x);
+
+isqrt_f32 | fsize_t isqrt_f32(const fsize_t x);
+
+log_f32 | fsize_t log_f32(const fsize_t x);
+
+pow_f32 | fsize_t pow_f32(const fsize_t x, const fsize_t y);
+
+sin_f32 | fsize_t sin_f32(const fsize_t theta);
+
+sincos_f32 | sincos_t sincos_f32(const fsize_t theta);
+
+sqrt_f32 | fsize_t sqrt_f32(const fsize_t x);
+
+3.1 atanf
+
+Function Description:
+
+Single-precision floating-point arctangent function (in radians).
+
+Function Prototype:
+
+fsize_t atanf(const fsize_t x);
+
+Function Parameters:
+
+x: Single-precision floating-point input.
+
+Function Return Value:
+
+Arctangent of floating-point parameter x.
+
+
+p55
+FDM320RV335 Software Library User Manual
+
+- 52 -
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+atanf | Test Size: 256 | 92
+
+3.2 atan2f
+
+Function Description:
+
+Single-precision floating-point two-argument arctangent function (in radians).
+
+Function Prototype:
+
+fsize_t atan2f(const fsize_t y, const fsize_t x);
+
+Function Parameters:
+
+y: First single-precision floating-point parameter
+
+x: Second single-precision floating-point parameter
+
+Function Return Value:
+
+Four-quadrant arctangent of parameters X/Y.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+atan2f | Test Size: 256 | 94
+
+p56
+FDM320RV335 Software Library User Manual
+
+- 53 -
+
+3.3 cosf
+
+Function Description:
+
+Single-precision floating-point cosine function (in radians).
+
+Function Prototype:
+
+fsize_t cosf(const fsize_t theta);
+
+Function Parameters:
+
+theta: Single-precision floating-point input parameter.
+
+Function Return Value:
+
+Cosine value of theta.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+cosf | Test Size: 512 | 89
+
+3.4 divf
+
+Function Description:
+
+Single-precision floating-point division.
+
+Function Prototype:
+
+fsize_t divf(const fsize_t num, const fsize_t den);
+
+Function Parameters:
+
+num: Dividend
+
+den: Divisor
+
+
+p57
+FDM320RV335 Software Library User Manual
+
+- 54 -
+
+Function Return Value:
+
+Returns the result of num / den.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+divf | Test Size: 512 | 64
+
+3.5 expf
+
+Function Description:
+
+Single-precision floating-point exponential function.
+
+Function Prototype:
+
+fsize_t expf(const fsize_t x);
+
+Function Parameters:
+
+x: Single-precision floating-point input.
+
+Function Return Value:
+
+Computed result.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+expf | Test Size: 512 | 173
+
+Notes:
+
+Input domain is limited to:
+
+±log(FLT_MAX)  (approximately < ±89)
+
+p58
+FDM320RV335 Software Library User Manual
+
+- 55 -
+
+3.6 isqrtf
+
+Function Description:
+
+Single-precision floating-point reciprocal square root operation.
+
+Function Prototype:
+
+fsize_t isqrtf(const fsize_t x);
+
+Function Parameters:
+
+x: Single-precision floating-point input.
+
+Function Return Value:
+
+Returns the reciprocal of the square root of floating-point parameter x.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+isqrtf | Test Size: 512 | 48
+
+3.7 logf
+
+Function Description:
+
+Single-precision floating-point natural logarithm.
+
+Function Prototype:
+
+fsize_t logf(const fsize_t x);
+
+Function Parameters:
+
+x: Single-precision floating-point input.
+
+
+p59
+FDM320RV335 Software Library User Manual
+
+- 56 -
+
+Function Return Value:
+
+Returns the natural logarithm of floating-point parameter x.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+logf | Test Size: 512 | 96
+
+3.8 powf
+
+Function Description:
+
+Single-precision floating-point power function.
+
+Function Prototype:
+
+fsize_t powf(const fsize_t x, const fsize_t y);
+
+Function Parameters:
+
+x: Base value
+
+y: Exponent value
+
+Function Return Value:
+
+Returns the computed result of x^y.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+powf | Test Size: 128 | 199
+
+p60
+FDM320RV335 Software Library User Manual
+
+- 57 -
+
+Notes:
+
+Input x must be greater than or equal to 1.
+
+3.9 sinf
+
+Function Description:
+
+Single-precision floating-point sine function (in radians).
+
+Function Prototype:
+
+fsize_t sinf(const fsize_t theta);
+
+Function Parameters:
+
+theta: Single-precision floating-point input.
+
+Function Return Value:
+
+Sine value of theta.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+sinf | Test Size: 512 | 83
+
+3.10 sincosf
+
+Function Description:
+
+Single-precision floating-point sine and cosine function (in radians).
+
+
+p61
+FDM320RV335 Software Library User Manual
+
+- 58 -
+
+Function Prototype:
+
+sincos_t sincosf(const fsize_t theta);
+
+Function Parameters:
+
+theta: Single-precision floating-point input.
+
+Function Return Value:
+
+Sine and cosine values of theta.
+
+Definition of sincos_t:
+
+```c
+typedef struct {
+    fsize_t c;   // The Cosine
+    fsize_t s;   // The Sine
+} sincos_t;
+
+
+p62
+FDM320RV335 Software Library User Manual
+
+- 59 -
+
+3.11 sqrtf
+
+Function Description:
+
+Single-precision floating-point square root operation.
+
+Function Prototype:
+
+fsize_t sqrtf(const fsize_t x);
+
+Function Parameters:
+
+x: Single-precision floating-point input.
+
+Function Return Value:
+
+Square root of x.
+
+Function Performance:
+
+Function Name | Data Size | Cycle Count
+
+sqrtf | Test Size: 512 | 39
+
+
+p63
+End of translated document.
+
+FDM320RV335 Software Library User Manual translation completed.
+
+Notes:
+
+- Some page numbering in the source PDF differs from internal printed numbering.
+- Technical terminology, APIs, structures, and performance tables were preserved.
+- If desired, a second-pass edition can be created with cleaner formatting, unified C syntax styling, and extracted reusable header files.

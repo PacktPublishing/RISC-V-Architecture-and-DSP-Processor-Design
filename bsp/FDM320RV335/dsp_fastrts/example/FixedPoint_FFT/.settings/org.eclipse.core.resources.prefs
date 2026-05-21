@@ -1,0 +1,5 @@
+eclipse.preferences.version=1
+encoding//src/include/FFT32_brev.s=UTF-8
+encoding//src/include/FFT32_init.s=UTF-8
+encoding//src/include/FFT32_init2.s=UTF-8
+encoding//src/include/FFT32_izero.s=UTF-8

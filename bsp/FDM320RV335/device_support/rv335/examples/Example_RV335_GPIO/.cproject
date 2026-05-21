@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+    	
+    <storageModule moduleId="org.eclipse.cdt.core.settings">
+        		
+        <cconfiguration id="com.fdmtek.ide.builder.projectType.riscv.exe.config.debug.1189106961">
+            			
+            <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.fdmtek.ide.builder.projectType.riscv.exe.config.debug.1189106961" moduleId="org.eclipse.cdt.core.settings" name="Debug">
+                				
+                <externalSettings/>
+                				
+                <extensions>
+                    					
+                    <extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+                    					
+                    <extension id="com.fdmtek.ide.builder.errorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    					
+                    <extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    				
+                </extensions>
+                			
+            </storageModule>
+            			
+            <storageModule moduleId="cdtBuildSystem" version="4.0.0">
+                				
+                <configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe,com.fdmtek.ide.builder.buildType=com.fdmtek.ide.builder.buildType.debug" cleanCommand="${FDMTEK_IDE_HOME}build-utils\clean" description="" id="com.fdmtek.ide.builder.projectType.riscv.exe.config.debug.1189106961" name="Debug" parent="com.fdmtek.ide.builder.projectType.riscv.exe.config.debug">
+                    					
+                    <folderInfo id="com.fdmtek.ide.builder.projectType.riscv.exe.config.debug.1189106961." name="/" resourcePath="">
+                        						
+                        <toolChain id="com.fdmtek.ide.builder.riscv.toolchain.elf.debug.1442601591" name="elf debug toolChain" superClass="com.fdmtek.ide.builder.riscv.toolchain.elf.debug">
+                            							
+                            <targetPlatform binaryParser="org.eclipse.cdt.core.ELF" id="com.fdmtek.ide.builder.riscv.base.toolChain.targetPlatform.1396698908" isAbstract="false" name="targetPlatform" superClass="com.fdmtek.ide.builder.riscv.base.toolChain.targetPlatform"/>
+                            							
+                            <builder buildPath="${workspace_loc:/Example_RV335_GPIO}/Debug" id="com.fdmtek.ide.builder.riscv.base.toolChain.builder.1147073490" keepEnvironmentInBuildfile="false" name="Make" superClass="com.fdmtek.ide.builder.riscv.base.toolChain.builder"/>
+                            							
+                            <tool id="com.fdmtek.ide.builder.riscv.toolChain.compiler.clang.compiler.235932985" name="RISCV Compiler" superClass="com.fdmtek.ide.builder.riscv.toolChain.compiler.clang.compiler">
+                                								
+                                <inputType id="com.fdmtek.ide.builder.rv.compiler.as.input.c.1305564363" name="C Source" superClass="com.fdmtek.ide.builder.rv.compiler.as.input.c"/>
+                                								
+                                <inputType id="com.fdmtek.ide.builder.rv.compiler.as.input.cpp.544920500" name="CPP Source" superClass="com.fdmtek.ide.builder.rv.compiler.as.input.cpp"/>
+                                							
+                            </tool>
+                            							
+                            <tool id="com.fdmtek.ide.builder.riscv.toolChain.compiler.as.1291919024" name="RISCV Assembler" superClass="com.fdmtek.ide.builder.riscv.toolChain.compiler.as">
+                                								
+                                <inputType id="com.fdmtek.ide.builder.rv.compiler.as.input.asm.462436498" name="ASM source" superClass="com.fdmtek.ide.builder.rv.compiler.as.input.asm"/>
+                                							
+                            </tool>
+                            							
+                            <tool id="com.fdmtek.ide.builder.riscv.toolChain.linker.1446577042" name="RISCV linker" superClass="com.fdmtek.ide.builder.riscv.toolChain.linker"/>
+                            						
+                        </toolChain>
+                        					
+                    </folderInfo>
+                    					
+                    <sourceEntries>
+                        						
+                        <entry excluding="system|include|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+                        						
+                        <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="include"/>
+                        						
+                        <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+                        						
+                        <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="system"/>
+                        					
+                    </sourceEntries>
+                    				
+                </configuration>
+                			
+            </storageModule>
+            			
+            <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+            		
+        </cconfiguration>
+        		
+        <cconfiguration id="com.fdmtek.ide.builder.projectType.riscv.exe.config.release.1924345583">
+            			
+            <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.fdmtek.ide.builder.projectType.riscv.exe.config.release.1924345583" moduleId="org.eclipse.cdt.core.settings" name="Release">
+                				
+                <externalSettings/>
+                				
+                <extensions>
+                    					
+                    <extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+                    					
+                    <extension id="com.fdmtek.ide.builder.errorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    					
+                    <extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    				
+                </extensions>
+                			
+            </storageModule>
+            			
+            <storageModule moduleId="cdtBuildSystem" version="4.0.0">
+                				
+                <configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe,com.fdmtek.ide.builder.buildType=com.fdmtek.ide.builder.buildType.release" cleanCommand="${FDMTEK_IDE_HOME}build-utils\clean" description="" id="com.fdmtek.ide.builder.projectType.riscv.exe.config.release.1924345583" name="Release" parent="com.fdmtek.ide.builder.projectType.riscv.exe.config.release">
+                    					
+                    <folderInfo id="com.fdmtek.ide.builder.projectType.riscv.exe.config.release.1924345583." name="/" resourcePath="">
+                        						
+                        <toolChain id="com.fdmtek.ide.builder.riscv.toolchain.elf.release.551432667" name="elf release toolChain" superClass="com.fdmtek.ide.builder.riscv.toolchain.elf.release">
+                            							
+                            <targetPlatform binaryParser="org.eclipse.cdt.core.ELF" id="com.fdmtek.ide.builder.riscv.base.toolChain.targetPlatform.1665543489" isAbstract="false" name="targetPlatform" superClass="com.fdmtek.ide.builder.riscv.base.toolChain.targetPlatform"/>
+                            							
+                            <builder buildPath="${workspace_loc:/Example_RV335_GPIO}/Release" id="com.fdmtek.ide.builder.riscv.base.toolChain.builder.1317458032" keepEnvironmentInBuildfile="false" name="Make" superClass="com.fdmtek.ide.builder.riscv.base.toolChain.builder"/>
+                            							
+                            <tool id="com.fdmtek.ide.builder.riscv.toolChain.compiler.clang.compiler.2035474448" name="RISCV Compiler" superClass="com.fdmtek.ide.builder.riscv.toolChain.compiler.clang.compiler">
+                                								
+                                <option id="com.fdmtek.ide.builder.rv.base.compiler.option.debuginfo.2146705849" name="Generate debug information (-g)" superClass="com.fdmtek.ide.builder.rv.base.compiler.option.debuginfo" useByScannerDiscovery="false" value="false" valueType="boolean"/>
+                                								
+                                <inputType id="com.fdmtek.ide.builder.rv.compiler.as.input.c.1498664949" name="C Source" superClass="com.fdmtek.ide.builder.rv.compiler.as.input.c"/>
+                                								
+                                <inputType id="com.fdmtek.ide.builder.rv.compiler.as.input.cpp.1056227824" name="CPP Source" superClass="com.fdmtek.ide.builder.rv.compiler.as.input.cpp"/>
+                                							
+                            </tool>
+                            							
+                            <tool id="com.fdmtek.ide.builder.riscv.toolChain.compiler.as.730491688" name="RISCV Assembler" superClass="com.fdmtek.ide.builder.riscv.toolChain.compiler.as">
+                                								
+                                <option id="com.fdmtek.ide.builder.rv.base.assembler.option.debuginfo.1097461793" name="Generate debug information (-g)" superClass="com.fdmtek.ide.builder.rv.base.assembler.option.debuginfo" useByScannerDiscovery="false" value="false" valueType="boolean"/>
+                                								
+                                <inputType id="com.fdmtek.ide.builder.rv.compiler.as.input.asm.2002132261" name="ASM source" superClass="com.fdmtek.ide.builder.rv.compiler.as.input.asm"/>
+                                							
+                            </tool>
+                            							
+                            <tool id="com.fdmtek.ide.builder.riscv.toolChain.linker.1024265956" name="RISCV linker" superClass="com.fdmtek.ide.builder.riscv.toolChain.linker"/>
+                            						
+                        </toolChain>
+                        					
+                    </folderInfo>
+                    					
+                    <sourceEntries>
+                        						
+                        <entry excluding="system|include|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+                        						
+                        <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="include"/>
+                        						
+                        <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+                        						
+                        <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="system"/>
+                        					
+                    </sourceEntries>
+                    				
+                </configuration>
+                			
+            </storageModule>
+            			
+            <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+            		
+        </cconfiguration>
+        	
+    </storageModule>
+    	
+    <storageModule moduleId="cdtBuildSystem" version="4.0.0">
+        		
+        <project id="Example_RV335_GPIO.com.fdmtek.ide.builder.projectType.riscv.exe.985694111" name="RV project" projectType="com.fdmtek.ide.builder.projectType.riscv.exe"/>
+        	
+    </storageModule>
+    	
+    <storageModule moduleId="scannerConfiguration">
+        		
+        <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+        	
+    </storageModule>
+    	
+    <storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+    
+</cproject>
